@@ -1,0 +1,53 @@
+/*
+
+	来源于：http://ghusse.github.io/jQRangeSlider/
+	Author:SM
+    Description:拖拽时间轴组件样式
+    Date:2014-10-10
+*/ 
+// *{font-size:12px;}
+/*时间轴线*/
+.ui-ruler-tick {
+	border-left: 1px solid #C1C8DF;
+	margin-left: 1px;
+	height: 12px;
+}
+/*月份文字*/
+.ui-ruler-tick-inner {
+	position: absolute;
+	top: 12px;
+	margin-right: 1px;
+}
+/*时间轴*/
+.ui-rangeSlider .ui-rangeSlider-innerBar {
+	height: 5px;
+	margin: 0px;
+	padding: 0px;
+	background: #8D98BC;
+}
+
+.ui-rangeSlider .ui-rangeSlider-bar {
+	height: 5px;
+	margin: 0px;
+	padding: 0px;
+	background: transparent url(dateSilderMove.png) repeat-x;
+	cursor:pointer;
+}
+
+/*拖拽按钮*/
+.ui-rangeSlider .ui-rangeSlider-handle {
+	width: 18px;
+	height: 31px;
+	background: #DDDDDD url(dateSilderArr.png) no-repeat;
+	margin-top: -15px;
+	cursor: pointer;
+}
+
+/*文字*/
+.ui-rangeSlider-label {
+	bottom: 15px;
+	margin: 0px 0px 2px;
+	background: #F3F9EF;
+	height: 12px;
+	cursor: pointer;
+}
