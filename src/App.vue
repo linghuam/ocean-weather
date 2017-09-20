@@ -10,6 +10,11 @@ import myMenu from './components/menu'
 import myMap from './components/map'
 
 export default {
+  data () {
+    return {
+      map:null
+    }
+  },
   components:{
     myMap,
     myMenu

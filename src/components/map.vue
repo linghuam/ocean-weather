@@ -11,7 +11,6 @@ export default {
     return {
     };
   },
-
   mounted() {
     var map = L.map('map', {
       minZoom: 2,
@@ -20,12 +19,13 @@ export default {
       center: [24, 106]
     });
     new GoogleLayer('http://mt2.google.cn/vt/lyrs=m&hl=zh-CN&gl=cn&s=Gal&z={z}&x={x}&y={y}').addTo(map);
+    this.$parent.$data.map = map;
   }
 };
 
 </script>
 
-<style scoped>
+<style>
 #map {
   position: absolute;
   left: 0;
