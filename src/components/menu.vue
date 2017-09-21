@@ -10,6 +10,7 @@
 import { FuncWind } from '../js/func.wind'
 import { FuncWindMe } from '../js/func.wind.me'
 import { FuncFlow } from '../js/func.flow'
+import { FuncPressure } from '../js/func.pressure'
 
 export default {
   data() {
@@ -39,8 +40,12 @@ export default {
         this._funcFlow.stop();
         this._funcFlow.start();
       } else if(type === '气压') {
-
-      }else if(type === '能见度') {
+        if(!this._funcPressure) {
+          this._funcPressure = new FuncPressure(this.$parent.$data.map);
+        }
+        this._funcPressure.stop();
+        this._funcPressure.start();
+      } else if(type === '能见度') {
 
       }
     }
