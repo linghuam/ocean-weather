@@ -21,6 +21,9 @@ export class FuncWind {
         maxVelocity: 15
       });
       this._velocityLayer = velocityLayer;
+      if(this._map.hasLayer(this._velocityLayer)) {
+        this._map.removeLayer(this._velocityLayer);
+      }
       this._map.addLayer(velocityLayer);
     }.bind(this));
   }

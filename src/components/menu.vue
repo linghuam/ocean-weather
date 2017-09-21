@@ -8,22 +8,29 @@
 
 <script>
 import { FuncWind } from '../js/func.wind'
+import { FuncWindMe } from '../js/func.wind.me'
 
 export default {
   data() {
     return {
-      items: ['风', '洋流', '海温']
+      items: ['风', '风2', '洋流', '海温']
     };
   },
 
   methods: {
     btnClickEvt(type) {
       if(type === '风') {
-        if (!this._funcWind) {
-          this._funcWind = new FuncWind(this.$parent.$data.map );
+        if(!this._funcWind) {
+          this._funcWind = new FuncWind(this.$parent.$data.map);
         }
         this._funcWind.stop();
         this._funcWind.start();
+      } else if(type === '风2') {
+        if(!this._funcWind2) {
+          this._funcWind2 = new FuncWindMe(this.$parent.$data.map);
+        }
+        this._funcWind2.stop();
+        this._funcWind2.start();
       } else if(type === '洋流') {
 
       } else if(type === '海温') {

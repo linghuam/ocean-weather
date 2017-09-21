@@ -15,6 +15,7 @@
     "jquery": "^3.2.1",
     "leaflet": "^1.2.0",
     "leaflet-velocity": "^1.2.3",
+    "papaparse": "^4.3.6",
     "vue": "^2.4.2"
   },
   "devDependencies": {

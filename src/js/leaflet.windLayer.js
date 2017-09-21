@@ -1,4 +1,4 @@
-L.CustomLayer = L.Renderer.extend({
+export var WindLayer = L.Renderer.extend({
 
     initialize: function(options, config) {
         L.Renderer.prototype.initialize.call(this, options);
@@ -61,18 +61,27 @@ L.CustomLayer = L.Renderer.extend({
             return;
         }
         var ctx = this._ctx,
-            map = this._map
+            map = this._map,
         data = this._data;
 
         for (var i = 0, len = data.length; i < len; i++) {
             var obj = data[i];
             var latlng = L.latLng(obj[this.cfg.lat], obj[this.cfg.lng]);
             var point = map.latLngToLayerPoint(latlng);
-            this.drawDirArrow(point, +obj[this.cfg.dir]);
+            var level = obj[this.cfg.value];
+            this.drawWind(point, +obj[this.cfg.dir], null, level);
         }
     },
 
-    drawDirArrow: function(startpoint, dir, r) {
+    /**
+     * 绘制风
+     * @param  {obj} startpoint 起始点
+     * @param  {Number} dir        方向
+     * @param  {Number} r          线的长度 pixel
+     * @param  {Number} level      风等级
+     * @return {null}            null
+     */
+    drawWind: function(startpoint, dir, r, level) {
         r = r || 16;
         var arc = (Math.PI * dir) / 180;
         var a = startpoint.x,
@@ -81,149 +90,30 @@ L.CustomLayer = L.Renderer.extend({
             y0 = b - r;
         var x1 = a + (x0 - a) * Math.cos(arc) - (y0 - b) * Math.sin(arc);
         var y1 = b + (x0 - a) * Math.sin(arc) + (y0 - b) * Math.cos(arc);
-        this.drawArrow(this._ctx, a, b, x1, y1, 30, 10, 8, '#2A95A6');
+        var endPoint = { x: x1, y: y1 };
+
+        this.wind(this._ctx, startpoint, endPoint, level);
     },
 
-    /*
-     * https://www.w3cplus.com/canvas/drawing-arrow.html
-     * https://www.zybang.com/question/fda330126d2232e5159d1ff1b69186b0.html
-     */
-    drawArrow: function(ctx, fromX, fromY, toX, toY, theta, headlen, width, color) {
-        theta = typeof(theta) != 'undefined' ? theta : 30;
-        headlen = typeof(theta) != 'undefined' ? headlen : 10;
-        width = typeof(width) != 'undefined' ? width : 1;
-        color = typeof(color) != 'color' ? color : '#000';
-        // 计算各角度和对应的P2,P3坐标 
-        var angle = Math.atan2(fromY - toY, fromX - toX) * 180 / Math.PI,
-            angle1 = (angle + theta) * Math.PI / 180,
-            angle2 = (angle - theta) * Math.PI / 180,
-            topX = headlen * Math.cos(angle1),
-            topY = headlen * Math.sin(angle1),
-            botX = headlen * Math.cos(angle2),
-            botY = headlen * Math.sin(angle2);
-        ctx.save();
-        ctx.beginPath();
-        var arrowX = fromX - topX,
-            arrowY = fromY - topY;
-        ctx.moveTo(arrowX, arrowY);
-        ctx.moveTo(fromX, fromY);
-        ctx.lineTo(toX, toY);
-        arrowX = toX + topX;
-        arrowY = toY + topY;
-        ctx.moveTo(arrowX, arrowY);
-        ctx.lineTo(toX, toY);
-        arrowX = toX + botX;
-        arrowY = toY + botY;
-        ctx.lineTo(arrowX, arrowY);
-        ctx.strokeStyle = color;
-        ctx.lineWidth = width;
-        ctx.stroke();
-        ctx.restore();
-    }
-});
-
-L.WindLayer = L.Renderer.extend({
-
-    initialize: function(options, config) {
-        L.Renderer.prototype.initialize.call(this, options);
-        this.options.padding = 0.1;
-        this.cfg = config;
-        this._data = (config && config.data) || [];
-    },
-
-    onAdd: function(map) {
-
-        this._container = L.DomUtil.create('canvas', 'leaflet-zoom-animated');
-
-        var pane = map.getPane(this.options.pane);
-        pane.appendChild(this._container);
-
-        this._ctx = this._container.getContext('2d');
-
-        this._update();
-    },
-
-    onRemove: function(map) {
-        L.DomUtil.remove(this._container);
-    },
-
-    _update: function() {
-        if (this._map._animatingZoom && this._bounds) {
-            return;
-        }
-
-        L.Renderer.prototype._update.call(this);
-
-        var b = this._bounds,
-            container = this._container,
-            size = b.getSize(),
-            m = L.Browser.retina ? 2 : 1;
-
-        L.DomUtil.setPosition(container, b.min);
-
-        // set canvas size (also clearing it); use double size on retina
-        container.width = m * size.x;
-        container.height = m * size.y;
-        container.style.width = size.x + 'px';
-        container.style.height = size.y + 'px';
-
-        if (L.Browser.retina) {
-            this._ctx.scale(2, 2);
-        }
-
-        // translate so we use the same path coordinates after canvas element moves
-        this._ctx.translate(-b.min.x, -b.min.y);
-
-        // Tell paths to redraw themselves
-        this.fire('update');
-
-        this._draw();
-    },
-
-    _draw: function() {
-        if (!this._data.length) {
-            return;
-        }
-        var ctx = this._ctx,
-            map = this._map
-        data = this._data;
-
-        for (var i = 0, len = data.length; i < len; i++) {
-            var obj = data[i];
-            var latlng = L.latLng(obj[this.cfg.lat], obj[this.cfg.lng]);
-            var point = map.latLngToLayerPoint(latlng);
-            var level = obj[this.cfg.value];
-            this.drawWind(point, +obj[this.cfg.dir],null,level);
-        }
-    },
-
-    drawWind: function(startpoint, dir, r,level) {
-        r = r || 40;
-        var arc = (Math.PI * dir) / 180;
-        var a = startpoint.x,
-            b = startpoint.y,
-            x0 = a,
-            y0 = b - r;
-        var x1 = a + (x0 - a) * Math.cos(arc) - (y0 - b) * Math.sin(arc);
-        var y1 = b + (x0 - a) * Math.sin(arc) + (y0 - b) * Math.cos(arc);
-        var endPoint = {x:x1,y:y1};
-
-        this.wind(this._ctx, startpoint, endPoint,level);
-    },
-
-    /*
-     * 封装 
+    /**
+     * 绘制风向和风力
+     * @param  {object} ctx        canvas画布
+     * @param  {obj} startPoint 起始点
+     * @param  {obj} endPoint   终止点
+     * @param  {Number} level      等级
+     * @return {null}            null
      */
     wind: function(ctx, startPoint, endPoint, level) {
         var sp = startPoint,
             ep = endPoint;
 
-        // ctx.save();
         ctx.beginPath();
 
+        //画风向
         ctx.moveTo(sp.x, sp.y);
         ctx.lineTo(ep.x, ep.y);
 
+        //画等级
         var prs = this.getPRByLevel(startPoint, endPoint, level);
         for (var i = 0, len = prs.length; i < len; i++) {
             ep = prs[i].point;
@@ -261,17 +151,22 @@ L.WindLayer = L.Renderer.extend({
             ctx.moveTo(ep.x, ep.y);
             ctx.lineTo(x, y);
         }
-
+        ctx.strokeStyle = '#D8F2EC';
         ctx.stroke();
-
         ctx.closePath();
-        // ctx.restore();
     },
 
+    /**
+     * 获取风的等级线的点和半径
+     * @param  {obj} startPoint 起始点
+     * @param  {obj} endPoint   终止点
+     * @param  {Number} level      等级
+     * @return {Array}            返回等级数组
+     */
     getPRByLevel: function(startPoint, endPoint, level) {
         var prs = [],
-            L2 = 10,
-            L4 = 20;
+            L2 = 4,  // 等级为2时线的长度
+            L4 = 8;  // 等级为4时线的长度
 
         var p0 = endPoint,
             p1 = {
@@ -383,5 +278,4 @@ L.WindLayer = L.Renderer.extend({
         }
         return prs;
     }
-
 });
