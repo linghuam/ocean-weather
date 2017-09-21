@@ -1,4 +1,4 @@
-L.FlowLayer = L.Renderer.extend({
+export var FlowLayer = L.Renderer.extend({
 
   initialize: function (options, config) {
     L.Renderer.prototype.initialize.call(this, options);
@@ -61,7 +61,7 @@ L.FlowLayer = L.Renderer.extend({
       return;
     }
     var ctx = this._ctx,
-      map = this._map
+      map = this._map,
     data = this._data;
 
     for(var i = 0, len = data.length; i < len; i++) {

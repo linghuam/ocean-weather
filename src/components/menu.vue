@@ -9,11 +9,12 @@
 <script>
 import { FuncWind } from '../js/func.wind'
 import { FuncWindMe } from '../js/func.wind.me'
+import { FuncFlow } from '../js/func.flow'
 
 export default {
   data() {
     return {
-      items: ['风', '风2', '洋流', '海温']
+      items: ['风', '风2', '洋流', '气压', '能见度']
     };
   },
 
@@ -32,8 +33,14 @@ export default {
         this._funcWind2.stop();
         this._funcWind2.start();
       } else if(type === '洋流') {
+        if(!this._funcFlow) {
+          this._funcFlow = new FuncFlow(this.$parent.$data.map);
+        }
+        this._funcFlow.stop();
+        this._funcFlow.start();
+      } else if(type === '气压') {
 
-      } else if(type === '海温') {
+      }else if(type === '能见度') {
 
       }
     }
