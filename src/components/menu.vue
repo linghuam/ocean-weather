@@ -11,6 +11,7 @@ import { FuncWind } from '../js/func.wind'
 import { FuncWindMe } from '../js/func.wind.me'
 import { FuncFlow } from '../js/func.flow'
 import { FuncPressure } from '../js/func.pressure'
+import { FuncVisibility } from '../js/func.visibility'
 
 export default {
   data() {
@@ -46,7 +47,11 @@ export default {
         this._funcPressure.stop();
         this._funcPressure.start();
       } else if(type === '能见度') {
-
+        if(!this._funcVisibility) {
+          this._funcVisibility = new FuncVisibility(this.$parent.$data.map);
+        }
+        this._funcVisibility.stop();
+        this._funcVisibility.start();
       }
     }
   },
