@@ -16,7 +16,8 @@ export default {
       minZoom: 2,
       maxZoom: 18,
       zoom: 4,
-      center: [24, 106]
+      center: [24, 106],
+      worldCopyJump:true
     });
     new GoogleLayer('http://mt2.google.cn/vt/lyrs=m&hl=zh-CN&gl=cn&s=Gal&z={z}&x={x}&y={y}').addTo(map);
     this.$parent.$data.map = map;

@@ -41,7 +41,7 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 
 https://www.windy.com
 https://github.com/windyty/API
-1、全球跨180度展示  
+1、全球跨180度展示  worldCopyJump:true
 2、风的动态效果
 3、跟宝船网类似
 4、线光滑  http://turfjs.org/docs/#bezier
