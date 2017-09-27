@@ -1,0 +1,74 @@
+
+PRESSURE CONTOUR FILES (yyyymmdd_hhZ_PC.txt 气压等值线)(yyyymmdd_hhZ_ST.txt 海温等值线)(yyyymmdd_hhZ_UN.txt 500MB)(20120820_12Z_SW.txt 涌)
+---------------------------------------------
+There are two sections to the pressure data. The first is a list of coordinates defining each
+pressure contour (996 mb, 1000 mb, 1004 mb, etc). The second is a list of coordinates that
+indicate the location and pressure value for the main high and low pressure centers. The first
+section starts with the following line:
+
+    [Latitude],[Longitude],[Value]
+
+This line is followed by the latitude/longitude pairs and contour value. A blank line indicates
+the end of the current contour line and the start of the next.
+
+    EXAMPLE: -73.66,145.92,1040
+
+The start of the second section is indicated by the line
+
+    [Latitude],[Longitude],[HI=1/LO=0],[Value]
+
+    EXAMPLE:
+    42.75,-32.63,0,987
+
+where the first two numbers indicate the latitude and longitude of the center, the third
+number indicates the type (0 = Low center, 1 = High center), and the fourth number indicates
+the value in millibars.
+
+
+SIGNIFICANT WAVE HEIGHT CONTOURS (yyyymmdd_hhZ_HC.txt)（浪高等值线）
+-------------------------------------------------------
+Same format as the pressure data ( [Latitude],[Longitude],[Value] ) where Value is the height
+in meters. There is no second sections for high and low center values.
+
+
+VISIBILITY CONTOURS (yyyymmdd_hhZ_VS.txt)（能见度等值线）
+-------------------------------------------------------
+Same format as the pressure data ( [Latitude],[Longitude],[Value] ) where Value is the visibility
+in kilometers. There is no second sections for high and low center values.
+
+
+GRID POINT WIND DATA (yyyymmdd_hhZ_BC.txt 风)（yyyymmdd_hhZ_CR.txt 洋流）（20120820_12Z_1C.txt 涌）
+----------------------------------------
+The first line is a header line as follows:
+
+    [Latitude],[Longitude],[Value],[Direction]
+
+Each data line contains the latitude and longitude of the grid point, the Value of the wind
+speed in knots, and the wind Direction in degrees true (270 indicates wind from the west).
+
+
+SURFACE FRONTS FILE (yyyymmdd_hhZ_FR)
+-------------------------------------------
+
+  Sample data:
+
+    59.795450 -48.690409
+    60.539237 -42.408970
+    62.523667 -37.511576
+    64.796128 -35.914600
+    1001.0 1
+    -61.305831 -58.417774
+    -57.500238 -56.900122
+    -50.668665 -57.026593
+    -44.599945 -61.326608
+    -41.154688 -68.408986
+    -39.211988 -75.238422
+    1001.0 1
+
+  File is text format containing a list of latitude/longitude pairs for defining the front, followed
+  by a line containing the end-of-segment indicator (1001.0) and the type-of-front indicator
+  (1 = cold front, 2 = warm front, 3 = occluded front). The points defining each front are ordered
+  such that the movement of the front is to the right of the line drawn from first point in the list
+  to last point.
+
+
