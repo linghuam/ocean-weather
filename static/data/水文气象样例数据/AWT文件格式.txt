@@ -44,8 +44,8 @@ The first line is a header line as follows:
     [Latitude],[Longitude],[Value],[Direction]
 
 Each data line contains the latitude and longitude of the grid point, the Value of the wind
-speed in knots, and the wind Direction in degrees true (270 indicates wind from the west).
-
+speed in knots(海里), and the wind Direction in degrees true (270 indicates wind from the west).
+1海里(nmi)=1852米(m)
 
 SURFACE FRONTS FILE (yyyymmdd_hhZ_FR)
 -------------------------------------------
