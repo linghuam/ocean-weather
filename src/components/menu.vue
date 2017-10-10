@@ -9,6 +9,7 @@
 <script>
 import { FuncWind } from '../js/func.wind'
 import { FuncWind2 } from '../js/func.wind2'
+import { FuncFlow } from '../js/func.flow'
 import { FuncFlow2 } from '../js/func.flow2'
 import { FuncPressure } from '../js/func.pressure'
 import { FuncVisibility } from '../js/func.visibility'
@@ -25,6 +26,7 @@ export default {
 
       this._funcWind && this._funcWind.stop();
       this._funcWind2 && this._funcWind2.stop();
+      this._funcFlow && this._funcFlow.stop();
       this._funcFlow2 && this._funcFlow2.stop();
       this._funcPressure && this._funcPressure.stop();
       this._funcVisibility && this._funcVisibility.stop();
@@ -39,6 +41,11 @@ export default {
           this._funcWind2 = new FuncWind2(this.$parent.$data.map);
         }
         this._funcWind2.start();
+      } else if(type === '洋流') {
+        if(!this._funcFlow) {
+          this._funcFlow = new FuncFlow(this.$parent.$data.map);
+        }
+        this._funcFlow.start();
       } else if(type === '洋流2') {
         if(!this._funcFlow2) {
           this._funcFlow2 = new FuncFlow2(this.$parent.$data.map);
