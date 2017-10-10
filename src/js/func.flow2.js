@@ -1,7 +1,7 @@
 import Papa from 'papaparse'
-import { FlowLayer } from './leaflet.flowLayer'
+import { FlowLayer } from './leaflet.flow'
 
-export class FuncFlow {
+export class FuncFlow2 {
 
   constructor(map) {
     this._map = map;

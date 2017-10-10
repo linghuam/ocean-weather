@@ -8,15 +8,15 @@
 
 <script>
 import { FuncWind } from '../js/func.wind'
-import { FuncWindMe } from '../js/func.wind.me'
-import { FuncFlow } from '../js/func.flow'
+import { FuncWind2 } from '../js/func.wind2'
+import { FuncFlow2 } from '../js/func.flow2'
 import { FuncPressure } from '../js/func.pressure'
 import { FuncVisibility } from '../js/func.visibility'
 
 export default {
   data() {
     return {
-      items: ['风', '风2', '洋流', '气压', '能见度', '浪高', '海温', '涌', '500mb']
+      items: ['风', '风2', '洋流', '洋流2', '涌', '涌2', '气压', '500mb', '海温', '能见度', '浪高']
     };
   },
 
@@ -25,7 +25,7 @@ export default {
 
       this._funcWind && this._funcWind.stop();
       this._funcWind2 && this._funcWind2.stop();
-      this._funcFlow && this._funcFlow.stop();
+      this._funcFlow2 && this._funcFlow2.stop();
       this._funcPressure && this._funcPressure.stop();
       this._funcVisibility && this._funcVisibility.stop();
 
@@ -36,14 +36,14 @@ export default {
         this._funcWind.start();
       } else if(type === '风2') {
         if(!this._funcWind2) {
-          this._funcWind2 = new FuncWindMe(this.$parent.$data.map);
+          this._funcWind2 = new FuncWind2(this.$parent.$data.map);
         }
         this._funcWind2.start();
-      } else if(type === '洋流') {
-        if(!this._funcFlow) {
-          this._funcFlow = new FuncFlow(this.$parent.$data.map);
+      } else if(type === '洋流2') {
+        if(!this._funcFlow2) {
+          this._funcFlow2 = new FuncFlow2(this.$parent.$data.map);
         }
-        this._funcFlow.start();
+        this._funcFlow2.start();
       } else if(type === '气压') {
         if(!this._funcPressure) {
           this._funcPressure = new FuncPressure(this.$parent.$data.map);

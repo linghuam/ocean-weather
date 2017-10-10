@@ -1,7 +1,7 @@
 import Papa from 'papaparse'
 import { WindLayer } from './leaflet.wind'
 
-export class FuncWindMe {
+export class FuncWind2 {
 
   constructor(map) {
     this._map = map;
