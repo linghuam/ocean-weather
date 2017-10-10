@@ -33,6 +33,7 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 # 理论依据
 
 * [数据来源](http://nomads.ncep.noaa.gov/)
+* [grib](http://www.cpc.ncep.noaa.gov/products/wesley/reading_grib.html)
 * [数据转换](https://github.com/cambecc/grib2json)
 * [双线性插值算法](https://github.com/cambecc/earth)
 

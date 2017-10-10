@@ -16,7 +16,7 @@ import { FuncVisibility } from '../js/func.visibility'
 export default {
   data() {
     return {
-      items: ['风', '风2', '洋流', '气压', '能见度']
+      items: ['风', '风2', '洋流', '气压', '能见度', '浪高', '海温', '涌', '500mb']
     };
   },
 

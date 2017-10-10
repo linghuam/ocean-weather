@@ -119,7 +119,7 @@ export var WindLayer = CanvasLayer.extend({
       ctx.moveTo(ep.x, ep.y);
       ctx.lineTo(x, y);
     }
-    ctx.strokeStyle = '#D8F2EC';
+    ctx.strokeStyle = '#2A3BFD';
     ctx.stroke();
     ctx.closePath();
   },
