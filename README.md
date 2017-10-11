@@ -48,3 +48,9 @@ https://github.com/windyty/API
 4、线光滑  http://turfjs.org/docs/#bezier
 5、文字效果
 6、等值面生成
+// me
+7、不同等级的风不同颜色
+
+单位转化
+1海里(nmi)=1852米(m)
+1kt = 0.5144444m/s

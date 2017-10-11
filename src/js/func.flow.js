@@ -50,8 +50,8 @@ export class FuncFlow {
         for(var i = 0, len = results.data.length; i < len; i++) {
           var value = results.data[i][2] * 1852 / 3600;
           var rad = Math.PI * results.data[i][3] / 180;
-          flowUObj.data.push(value * Math.sin(rad));
-          flowVObj.data.push(value * Math.cos(rad));
+          flowUObj.data.push(value * Math.sin(rad) * 10);
+          flowVObj.data.push(value * Math.cos(rad) * 10);
         }
         data.push(flowUObj, flowVObj);
         var velocityLayer = this._velocityLayer = L.velocityLayer({
@@ -62,7 +62,7 @@ export class FuncFlow {
             displayEmptyString: 'No wind data'
           },
           data: data,
-          maxVelocity: 1
+          maxVelocity: 15
         });
         if(this._map.hasLayer(this._velocityLayer)) {
           this._map.removeLayer(this._velocityLayer);
@@ -70,26 +70,6 @@ export class FuncFlow {
         this._map.addLayer(velocityLayer);
       }.bind(this)
     });
-
-
-    // $.getJSON('./static/data/wind-gbr.json', function (data) {
-
-    //   var velocityLayer = L.velocityLayer({
-    //     displayValues: true,
-    //     displayOptions: {
-    //       velocityType: 'Global Wind',
-    //       displayPosition: 'bottomleft',
-    //       displayEmptyString: 'No wind data'
-    //     },
-    //     data: data,
-    //     maxVelocity: 15
-    //   });
-    //   this._velocityLayer = velocityLayer;
-    //   if(this._map.hasLayer(this._velocityLayer)) {
-    //     this._map.removeLayer(this._velocityLayer);
-    //   }
-    //   this._map.addLayer(velocityLayer);
-    // }.bind(this));
   }
 
   stop　() {
