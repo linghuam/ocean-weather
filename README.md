@@ -52,6 +52,9 @@ https://github.com/windyty/API
 7、不同等级的风不同颜色
 8、https://github.com/Leaflet/Leaflet.heat
 https://github.com/ursudio/leaflet-webgl-heatmap
+
+http://gallery.echartsjs.com/editor.html?c=xHJD3BZY5-
+
 单位转化
 1海里(nmi)=1852米(m)
 1kt = 0.5144444m/s
