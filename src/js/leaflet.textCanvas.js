@@ -1,4 +1,3 @@
-import {} from './ctxtextpath'
 /*
  * 线写文字 canvas
  */
@@ -31,10 +30,6 @@ var LineTextCanvas = L.Canvas.extend({
     try {
       var center = layer.getCenter();
       var pt = map.latLngToLayerPoint(center);
-      // var txtpaths = [];
-      // for (let i = 0, len = parts.length; i < len; i++){
-      //   txtpaths.push(parts[i].x,parts[i].y);
-      // }
       ctx.save();
       ctx.textAlign = 'start';
       ctx.textBaseline = 'middle';
@@ -44,16 +39,11 @@ var LineTextCanvas = L.Canvas.extend({
       ctx.lineWidth = 3;
       ctx.strokeText(text, pt.x, pt.y);
       ctx.fillText(text, pt.x, pt.y);
-      // if (txtpaths.length > 6) {
-      //   ctx.textPath(text, txtpaths);        
-      // }
       ctx.restore();
     } catch(ex) {
       var width = this._container.width;
       var height = this._container.height;
       ctx.clearRect(0, 0, width * 2, height * 2);
-      // console.log(ex);
-      // console.log(this._layers);
     }
   }
 });

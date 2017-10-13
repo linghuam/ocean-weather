@@ -16,7 +16,8 @@ export class FuncPressure {
       weight: 0.8,
       opacity: 0.85,
       fill: false,
-      noClip:true
+      // noClip:true,
+      // smoothFactor:0.1
     };
     var arr = [];
 
@@ -48,22 +49,30 @@ export class FuncPressure {
               var lastlng = (latlngs[latlngs.length - 1]).lng;
               var extend = Math.abs(lng - lastlng);
               if(extend >= 180) { //解决经度范围超过180连线异常
-                if(this._map.hasLayer(this.pressureFeatureGroup) && latlngs.length >=2) {
-                  var geo = L.polyline(latlngs, options).toGeoJSON();
-                  var curved = turf.bezier(geo, 10000, 1);
-                  var newlatlngs = [];
+                if(this._map.hasLayer(this.pressureFeatureGroup) && latlngs.length >2) {
+                  let geo = L.polyline(latlngs, options).toGeoJSON();
+                  let curved = turf.bezier(geo, 10000, 0.85);
+                  let newlatlngs = [];
                   for (let i =0, len = curved.geometry.coordinates.length; i < len; i++){
                     newlatlngs.push(L.latLng(curved.geometry.coordinates[i][1],curved.geometry.coordinates[i][0]));
                   }
-                  this.pressureFeatureGroup.addLayer(L.polyline(latlngs, options));
+                  this.pressureFeatureGroup.addLayer(L.polyline(newlatlngs, options));
+                  // this.pressureFeatureGroup.addLayer(L.polyline(latlngs, options));
                 }
                 latlngs = [];
                 latlngs.push(latlng);
               } else {
                 latlngs.push(latlng);
                 if(i === len - 1) {
-                  if(this._map.hasLayer(this.pressureFeatureGroup)) {
-                    this.pressureFeatureGroup.addLayer(L.polyline(latlngs, options));
+                  if(this._map.hasLayer(this.pressureFeatureGroup) && latlngs.length >2) {
+                  let geo = L.polyline(latlngs, options).toGeoJSON();
+                  let curved = turf.bezier(geo, 10000, 0.85);
+                  let newlatlngs = [];
+                  for (let i =0, len = curved.geometry.coordinates.length; i < len; i++){
+                    newlatlngs.push(L.latLng(curved.geometry.coordinates[i][1],curved.geometry.coordinates[i][0]));
+                  }
+                  this.pressureFeatureGroup.addLayer(L.polyline(newlatlngs, options));                    
+                    // this.pressureFeatureGroup.addLayer(L.polyline(latlngs, options));
                   }
                   latlngs = [];
                 }
