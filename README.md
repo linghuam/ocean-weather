@@ -45,12 +45,13 @@ https://github.com/windyty/API
 1、全球跨180度展示  worldCopyJump:true 【完成，但有问题：每次只能显示一个，不能同时显示多个】
 2、风的动态效果 【完成】
 3、跟宝船网类似
-4、线光滑  http://turfjs.org/docs/#bezier
+4、线光滑 【完成】 http://turfjs.org/docs/#bezier
 5、文字效果
 6、等值面生成
 // me
 7、不同等级的风不同颜色
-
+8、https://github.com/Leaflet/Leaflet.heat
+https://github.com/ursudio/leaflet-webgl-heatmap
 单位转化
 1海里(nmi)=1852米(m)
 1kt = 0.5144444m/s
