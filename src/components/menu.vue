@@ -13,7 +13,8 @@ import { FuncFlow } from '../js/func.flow'
 import { FuncFlow2 } from '../js/func.flow2'
 import { FuncPressure } from '../js/func.pressure'
 import { FuncVisibility } from '../js/func.visibility'
-import { FuncSurge2} from '../js/func.surge2'
+import { FuncSurge2 } from '../js/func.surge2'
+import { Func500mb } from '../js/func.500mb'
 
 export default {
   data() {
@@ -32,6 +33,7 @@ export default {
       this._funcPressure && this._funcPressure.stop();
       this._funcVisibility && this._funcVisibility.stop();
       this._funcSurge2 && this._funcSurge2.stop();
+      this._func500mb && 　this._func500mb.stop();
 
       if(type === '风') {
         if(!this._funcWind) {
@@ -56,25 +58,28 @@ export default {
       } else if(type === '涌') {
 
       } else if(type === '涌2') {
-        if (!this._funcSurge2) {
+        if(!this._funcSurge2) {
           this._funcSurge2 = new FuncSurge2(this.$parent.$data.map);
         }
         this._funcSurge2.start();
-      }else if(type === '气压') {
+      } else if(type === '气压') {
         if(!this._funcPressure) {
           this._funcPressure = new FuncPressure(this.$parent.$data.map);
         }
         this._funcPressure.start();
       } else if(type === '500mb') {
+        if(!this._func500mb) {
+          this._func500mb = new Func500mb(this.$parent.$data.map);
+        }
+        this._func500mb.start();
+      } else if(type === '海温') {
 
-      }else if(type === '海温') {
-
-      }else if(type === '能见度') {
+      } else if(type === '能见度') {
         if(!this._funcVisibility) {
           this._funcVisibility = new FuncVisibility(this.$parent.$data.map);
         }
         this._funcVisibility.start();
-      }else if(type === '浪高') {
+      } else if(type === '浪高') {
 
       }
     }
