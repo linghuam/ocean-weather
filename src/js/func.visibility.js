@@ -9,12 +9,17 @@ export class FuncVisibility {
 
   start() {
     var renderer = new LineTextCanvas();
-    var options = {
+    var optionsArea = {
+      renderer: renderer,
+      stroke:false,
+      fill: true,
+      fillColor: '#f00'
+    };
+    var optionsLine = {
       renderer: renderer,
       color: '#000',
       weight: 1,
-      fill: true,
-      fillColor: '#f00'
+      fill: false
     };
     var arr = [];
 
@@ -35,7 +40,7 @@ export class FuncVisibility {
             var row = arr[i];
             var lat = +row[0];
             var lng = +row[1];
-            var value = options.text = +row[2];
+            var value = optionsLine.text = +row[2];
             var latlng = L.latLng(lat, lng);
 
             if(i === 0) {
@@ -45,7 +50,8 @@ export class FuncVisibility {
               var extend = Math.abs(lng - lastlng);
               if(extend >= 180) { //解决经度范围超过180连线异常
                 if(this._map.hasLayer(this._visibilityFeatureGroup)) {
-                  this._visibilityFeatureGroup.addLayer(L.polygon(latlngs, options));
+                  this._visibilityFeatureGroup.addLayer(L.polygon(latlngs, optionsArea));
+                  this._visibilityFeatureGroup.addLayer(L.polyline(latlngs, optionsLine));
                 }
                 latlngs = [];
                 latlngs.push(latlng);
@@ -53,7 +59,8 @@ export class FuncVisibility {
                 latlngs.push(latlng);
                 if(i === len - 1) {
                   if(this._map.hasLayer(this._visibilityFeatureGroup)) {
-                    this._visibilityFeatureGroup.addLayer(L.polygon(latlngs, options));
+                    this._visibilityFeatureGroup.addLayer(L.polygon(latlngs, optionsArea));
+                    this._visibilityFeatureGroup.addLayer(L.polyline(latlngs, optionsLine));
                   }
                   latlngs = [];
                 }
