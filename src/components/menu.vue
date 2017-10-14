@@ -16,6 +16,7 @@ import { FuncVisibility } from '../js/func.visibility'
 import { FuncSurge2 } from '../js/func.surge2'
 import { Func500mb } from '../js/func.500mb'
 import { FuncTemperature } from '../js/func.temperature'
+import { FuncWave } from '../js/func.wave'
 
 export default {
   data() {
@@ -36,6 +37,7 @@ export default {
       this._funcSurge2 && this._funcSurge2.stop();
       this._func500mb && 　this._func500mb.stop();
       this._funcTemperature && this._funcTemperature.stop();
+      this._funcWave && this._funcWave.stop();
 
       if(type === '风') {
         if(!this._funcWind) {
@@ -85,7 +87,10 @@ export default {
         }
         this._funcVisibility.start();
       } else if(type === '浪高') {
-
+        if(!this._funcWave) {
+          this._funcWave = new FuncWave(this.$parent.$data.map);
+        }
+        this._funcWave.start();
       }
     }
   },
