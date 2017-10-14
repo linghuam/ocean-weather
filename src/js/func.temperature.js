@@ -1,6 +1,5 @@
 import Papa from 'papaparse'
-import './leafletHeatmap/heatmap.js'
-import './leafletHeatmap/leaflet-heatmap.js'
+import { HeatmapOverlay } from './leafletHeatmap/leaflet-heatmap'
 
 export class FuncTemperature {
 
@@ -14,7 +13,7 @@ export class FuncTemperature {
       complete: function (results) {
         var data = results.data || [];
         data = data.filter(function (value) {
-           return value !== '';
+          return value !== '' && value.length > 1;
         });
         var datacfg = {
           max: 40,
@@ -45,7 +44,7 @@ export class FuncTemperature {
           this._map.removeLayer(this._tempratureLayer);
         }
         this._map.addLayer(heatmapLayer);
-      },
+      }.bind(this),
     });
   }
 
