@@ -14,7 +14,9 @@
     "element-ui": "^1.4.4",
     "jquery": "^3.2.1",
     "leaflet": "^1.2.0",
+    "leaflet-heatmap": "^1.0.0",
     "leaflet-velocity": "^1.2.3",
+    "leaflet.heat": "^0.2.0",
     "papaparse": "^4.3.6",
     "turf": "^3.0.14",
     "vue": "^2.4.2"

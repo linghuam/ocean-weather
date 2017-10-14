@@ -54,7 +54,7 @@ https://github.com/windyty/API
 https://github.com/ursudio/leaflet-webgl-heatmap
 
 http://gallery.echartsjs.com/editor.html?c=xHJD3BZY5-
-
+https://www.patrick-wied.at/static/heatmapjs/?utm_source=npm_leaflet&utm_medium=webpack
 单位转化
 1海里(nmi)=1852米(m)
 1kt = 0.5144444m/s

@@ -15,6 +15,7 @@ import { FuncPressure } from '../js/func.pressure'
 import { FuncVisibility } from '../js/func.visibility'
 import { FuncSurge2 } from '../js/func.surge2'
 import { Func500mb } from '../js/func.500mb'
+import { FuncTemperature } from '../js/func.temperature'
 
 export default {
   data() {
@@ -34,6 +35,7 @@ export default {
       this._funcVisibility && this._funcVisibility.stop();
       this._funcSurge2 && this._funcSurge2.stop();
       this._func500mb && 　this._func500mb.stop();
+      this._funcTemperature && this._funcTemperature.stop();
 
       if(type === '风') {
         if(!this._funcWind) {
@@ -73,7 +75,10 @@ export default {
         }
         this._func500mb.start();
       } else if(type === '海温') {
-
+        if(!this._funcTemperature) {
+          this._funcTemperature = new FuncTemperature(this.$parent.$data.map);
+        }
+        this._funcTemperature.start();
       } else if(type === '能见度') {
         if(!this._funcVisibility) {
           this._funcVisibility = new FuncVisibility(this.$parent.$data.map);
