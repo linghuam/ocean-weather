@@ -46,7 +46,7 @@ https://github.com/windyty/API
 2、风的动态效果 【完成】
 3、跟宝船网类似
 4、线光滑 【完成】 http://turfjs.org/docs/#bezier
-5、文字效果
+5、文字效果 【完成】
 6、等值面生成
 // me
 7、不同等级的风不同颜色
