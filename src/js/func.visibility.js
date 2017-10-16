@@ -8,7 +8,7 @@ export class FuncVisibility {
   }
 
   start() {
-    var renderer = new LineTextCanvas();
+    var renderer = this._renderer = new LineTextCanvas();
     var optionsArea = {
       renderer: renderer,
       stroke:false,
@@ -24,10 +24,10 @@ export class FuncVisibility {
     };
     var arr = [];
 
-    if(this._visibilityFeatureGroup && this._map.hasLayer(this._visibilityFeatureGroup)) {
-      this._map.removeLayer(this._visibilityFeatureGroup);
-    }
-    this._visibilityFeatureGroup = L.featureGroup([]).addTo(this._map);
+    // if(this._visibilityFeatureGroup && this._map.hasLayer(this._visibilityFeatureGroup)) {
+    //   this._map.removeLayer(this._visibilityFeatureGroup);
+    // }
+    // this._visibilityFeatureGroup = L.featureGroup([]).addTo(this._map);
 
     var allSplitLatLngs = [];
     var allSplitTxt = [];
@@ -37,15 +37,17 @@ export class FuncVisibility {
       complete: function (results) {
         // console.log(allSplitLatLngs.length);
         for (let i =0 , len = allSplitLatLngs.length; i < len; i++){
-                if(this._map.hasLayer(this._visibilityFeatureGroup)) {
-                  this._visibilityFeatureGroup.addLayer(L.polygon(allSplitLatLngs[i], optionsArea));
-                }          
+                // if(this._map.hasLayer(this._visibilityFeatureGroup)) {
+                  // this._visibilityFeatureGroup.addLayer(L.polygon(allSplitLatLngs[i], optionsArea));
+                  L.polygon(allSplitLatLngs[i], optionsArea).addTo(this._map);
+                // }          
         }
         for (let i =0 , len = allSplitLatLngs.length; i < len; i++){
-                if(this._map.hasLayer(this._visibilityFeatureGroup)) {
+                // if(this._map.hasLayer(this._visibilityFeatureGroup)) {
                   optionsLine.text = allSplitTxt[i];
-                  this._visibilityFeatureGroup.addLayer(L.polyline(allSplitLatLngs[i], optionsLine));
-                }          
+                  // this._visibilityFeatureGroup.addLayer(L.polyline(allSplitLatLngs[i], optionsLine));
+                  L.polyline(allSplitLatLngs[i], optionsLine).addTo(this._map);
+                // }          
         }        
       }.bind(this),
       step: function (results, parser) {
@@ -107,8 +109,11 @@ export class FuncVisibility {
   }
 
   stop　() {
-    if(this._map.hasLayer(this._visibilityFeatureGroup)) {
-      this._map.removeLayer(this._visibilityFeatureGroup);
-    }
+    // if(this._map.hasLayer(this._visibilityFeatureGroup)) {
+    //   this._map.removeLayer(this._visibilityFeatureGroup);
+    // }
+    if (this._renderer) {
+      this._renderer.remove();
+    }      
   }
 }

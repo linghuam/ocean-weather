@@ -9,7 +9,7 @@ export class Func500mb {
   }
 
   start() {
-    var renderer = new LineTextCanvas();
+    var renderer = this._renderer = new LineTextCanvas();
     var options = {
       renderer: renderer,
       color: '#354656',
@@ -21,10 +21,10 @@ export class Func500mb {
     };
     var arr = [];
 
-    if(this._500mbFeatureGroup && this._map.hasLayer(this._500mbFeatureGroup)) {
-      this._map.removeLayer(this._500mbFeatureGroup);
-    }
-    this._500mbFeatureGroup = L.featureGroup([]).addTo(this._map);
+    // if(this._500mbFeatureGroup && this._map.hasLayer(this._500mbFeatureGroup)) {
+    //   this._map.removeLayer(this._500mbFeatureGroup);
+    // }
+    // this._500mbFeatureGroup = L.featureGroup([]).addTo(this._map);
 
     Papa.parse('./static/data/500mb.csv', {
       download: true,
@@ -49,7 +49,7 @@ export class Func500mb {
               var lastlng = (latlngs[latlngs.length - 1]).lng;
               var extend = Math.abs(lng - lastlng);
               if(extend >= 180) { //解决经度范围超过180连线异常
-                if(this._map.hasLayer(this._500mbFeatureGroup) && latlngs.length > 2) {
+                if(latlngs.length > 2) {
                   // let geo = L.polyline(latlngs, options).toGeoJSON();
                   // let curved = turf.bezier(geo, 10000, 0.85);
                   // let newlatlngs = [];
@@ -57,14 +57,15 @@ export class Func500mb {
                   //   newlatlngs.push(L.latLng(curved.geometry.coordinates[i][1], curved.geometry.coordinates[i][0]));
                   // }
                   // this._500mbFeatureGroup.addLayer(L.polyline(newlatlngs, options));
-                  this._500mbFeatureGroup.addLayer(L.polyline(latlngs, options));
+                  // this._500mbFeatureGroup.addLayer(L.polyline(latlngs, options));
+                  L.polyline(latlngs, options).addTo(this._map);
                 }
                 latlngs = [];
                 latlngs.push(latlng);
               } else {
                 latlngs.push(latlng);
                 if(i === len - 1) {
-                  if(this._map.hasLayer(this._500mbFeatureGroup) && latlngs.length > 2) {
+                  if(latlngs.length > 2) {
                     // let geo = L.polyline(latlngs, options).toGeoJSON();
                     // let curved = turf.bezier(geo, 10000, 0.85);
                     // let newlatlngs = [];
@@ -72,7 +73,8 @@ export class Func500mb {
                     //   newlatlngs.push(L.latLng(curved.geometry.coordinates[i][1], curved.geometry.coordinates[i][0]));
                     // }
                     // this._500mbFeatureGroup.addLayer(L.polyline(newlatlngs, options));
-                    this._500mbFeatureGroup.addLayer(L.polyline(latlngs, options));
+                    // this._500mbFeatureGroup.addLayer(L.polyline(latlngs, options));
+                     L.polyline(latlngs, options).addTo(this._map);
                   }
                   latlngs = [];
                 }
@@ -93,8 +95,11 @@ export class Func500mb {
   }
 
   stop　() {
-    if(this._map.hasLayer(this._500mbFeatureGroup)) {
-      this._map.removeLayer(this._500mbFeatureGroup);
-    }
+    // if(this._map.hasLayer(this._500mbFeatureGroup)) {
+    //   this._map.removeLayer(this._500mbFeatureGroup);
+    // }
+    if (this._renderer) {
+      this._renderer.remove();
+    }    
   }
 }

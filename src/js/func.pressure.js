@@ -9,7 +9,7 @@ export class FuncPressure {
   }
 
   start() {
-    var renderer = new LineTextCanvas();
+    var renderer  = this._renderer = new LineTextCanvas();
     var options = {
       renderer: renderer,
       color: '#354656',
@@ -21,10 +21,10 @@ export class FuncPressure {
     };
     var arr = [];
 
-    if(this.pressureFeatureGroup && this._map.hasLayer(this.pressureFeatureGroup)) {
-      this._map.removeLayer(this.pressureFeatureGroup);
-    }
-    this.pressureFeatureGroup = L.featureGroup([]).addTo(this._map);
+    // if(this.pressureFeatureGroup && this._map.hasLayer(this.pressureFeatureGroup)) {
+    //   this._map.removeLayer(this.pressureFeatureGroup);
+    // }
+    // this.pressureFeatureGroup = L.featureGroup([]).addTo(this._map);
 
     Papa.parse('./static/data/pressure.csv', {
       download: true,
@@ -49,14 +49,15 @@ export class FuncPressure {
               var lastlng = (latlngs[latlngs.length - 1]).lng;
               var extend = Math.abs(lng - lastlng);
               if(extend >= 180) { //解决经度范围超过180连线异常
-                if(this._map.hasLayer(this.pressureFeatureGroup) && latlngs.length >2) {
+                if(latlngs.length >2) {
                   let geo = L.polyline(latlngs, options).toGeoJSON();
                   let curved = turf.bezier(geo, 10000, 0.85);
                   let newlatlngs = [];
                   for (let i =0, len = curved.geometry.coordinates.length; i < len; i++){
                     newlatlngs.push(L.latLng(curved.geometry.coordinates[i][1],curved.geometry.coordinates[i][0]));
                   }
-                  this.pressureFeatureGroup.addLayer(L.polyline(newlatlngs, options));
+                  L.polyline(newlatlngs, options).addTo(this._map);
+                  // this.pressureFeatureGroup.addLayer(L.polyline(newlatlngs, options));
                   // this.pressureFeatureGroup.addLayer(L.polyline(latlngs, options));
                 }
                 latlngs = [];
@@ -64,14 +65,15 @@ export class FuncPressure {
               } else {
                 latlngs.push(latlng);
                 if(i === len - 1) {
-                  if(this._map.hasLayer(this.pressureFeatureGroup) && latlngs.length >2) {
+                  if(latlngs.length >2) {
                   let geo = L.polyline(latlngs, options).toGeoJSON();
                   let curved = turf.bezier(geo, 10000, 0.85);
                   let newlatlngs = [];
                   for (let i =0, len = curved.geometry.coordinates.length; i < len; i++){
                     newlatlngs.push(L.latLng(curved.geometry.coordinates[i][1],curved.geometry.coordinates[i][0]));
                   }
-                  this.pressureFeatureGroup.addLayer(L.polyline(newlatlngs, options));                    
+                  L.polyline(newlatlngs, options).addTo(this._map);                  
+                  // this.pressureFeatureGroup.addLayer(L.polyline(newlatlngs, options));                    
                     // this.pressureFeatureGroup.addLayer(L.polyline(latlngs, options));
                   }
                   latlngs = [];
@@ -93,8 +95,11 @@ export class FuncPressure {
   }
 
   stop　() {
-    if(this._map.hasLayer(this.pressureFeatureGroup)) {
-      this._map.removeLayer(this.pressureFeatureGroup);
+    // if(this._map.hasLayer(this.pressureFeatureGroup)) {
+    //   this._map.removeLayer(this.pressureFeatureGroup);
+    // }
+    if (this._renderer) {
+      this._renderer.remove();
     }
   }
 }
