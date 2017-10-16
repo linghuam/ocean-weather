@@ -13,7 +13,7 @@ export class FuncVisibility {
       renderer: renderer,
       stroke:false,
       fill: true,
-      fillColor: '#f00'
+      fillColor: '#89FF89'
     };
     var optionsLine = {
       renderer: renderer,

@@ -1,5 +1,5 @@
 
-PRESSURE CONTOUR FILES (yyyymmdd_hhZ_PC.txt ÆøÑ¹µÈÖµÏß)(yyyymmdd_hhZ_ST.txt º£ÎÂµÈÖµÏß)(yyyymmdd_hhZ_UN.txt 500MB)(20120820_12Z_SW.txt Ó¿)
+PRESSURE CONTOUR FILES (yyyymmdd_hhZ_PC.txt æ°”å‹ç­‰å€¼çº¿)(yyyymmdd_hhZ_ST.txt æµ·æ¸©ç­‰å€¼çº¿)(yyyymmdd_hhZ_UN.txt 500MB)(20120820_12Z_SW.txt æ¶Œ)
 ---------------------------------------------
 There are two sections to the pressure data. The first is a list of coordinates defining each
 pressure contour (996 mb, 1000 mb, 1004 mb, etc). The second is a list of coordinates that
@@ -25,27 +25,27 @@ number indicates the type (0 = Low center, 1 = High center), and the fourth numb
 the value in millibars.
 
 
-SIGNIFICANT WAVE HEIGHT CONTOURS (yyyymmdd_hhZ_HC.txt)£¨ÀË¸ßµÈÖµÏß£©
+SIGNIFICANT WAVE HEIGHT CONTOURS (yyyymmdd_hhZ_HC.txt)ï¼ˆæµªé«˜ç­‰å€¼çº¿ï¼‰
 -------------------------------------------------------
 Same format as the pressure data ( [Latitude],[Longitude],[Value] ) where Value is the height
 in meters. There is no second sections for high and low center values.
 
 
-VISIBILITY CONTOURS (yyyymmdd_hhZ_VS.txt)£¨ÄÜ¼û¶ÈµÈÖµÏß£©
+VISIBILITY CONTOURS (yyyymmdd_hhZ_VS.txt)ï¼ˆèƒ½è§åº¦ç­‰å€¼çº¿ï¼‰
 -------------------------------------------------------
 Same format as the pressure data ( [Latitude],[Longitude],[Value] ) where Value is the visibility
 in kilometers. There is no second sections for high and low center values.
 
 
-GRID POINT WIND DATA (yyyymmdd_hhZ_BC.txt ·ç)£¨yyyymmdd_hhZ_CR.txt ÑóÁ÷£©£¨20120820_12Z_1C.txt Ó¿£©
+GRID POINT WIND DATA (yyyymmdd_hhZ_BC.txt é£)ï¼ˆyyyymmdd_hhZ_CR.txt æ´‹æµï¼‰ï¼ˆ20120820_12Z_1C.txt æ¶Œï¼‰
 ----------------------------------------
 The first line is a header line as follows:
 
     [Latitude],[Longitude],[Value],[Direction]
 
 Each data line contains the latitude and longitude of the grid point, the Value of the wind
-speed in knots(º£Àï), and the wind Direction in degrees true (270 indicates wind from the west).
-1º£Àï(nmi)=1852Ã×(m)
+speed in knots(æµ·é‡Œ), and the wind Direction in degrees true (270 indicates wind from the west).
+1æµ·é‡Œ(nmi)=1852ç±³(m)
 
 SURFACE FRONTS FILE (yyyymmdd_hhZ_FR)
 -------------------------------------------
