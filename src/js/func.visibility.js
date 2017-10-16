@@ -19,7 +19,8 @@ export class FuncVisibility {
       renderer: renderer,
       color: '#000',
       weight: 1,
-      fill: false
+      fill: false,
+      opacity:0.6
     };
     var arr = [];
 
@@ -28,9 +29,25 @@ export class FuncVisibility {
     }
     this._visibilityFeatureGroup = L.featureGroup([]).addTo(this._map);
 
+    var allSplitLatLngs = [];
+    var allSplitTxt = [];
+
     Papa.parse('./static/data/visibility.csv', {
       download: true,
-      complete: function (results) {},
+      complete: function (results) {
+        // console.log(allSplitLatLngs.length);
+        for (let i =0 , len = allSplitLatLngs.length; i < len; i++){
+                if(this._map.hasLayer(this._visibilityFeatureGroup)) {
+                  this._visibilityFeatureGroup.addLayer(L.polygon(allSplitLatLngs[i], optionsArea));
+                }          
+        }
+        for (let i =0 , len = allSplitLatLngs.length; i < len; i++){
+                if(this._map.hasLayer(this._visibilityFeatureGroup)) {
+                  optionsLine.text = allSplitTxt[i];
+                  this._visibilityFeatureGroup.addLayer(L.polyline(allSplitLatLngs[i], optionsLine));
+                }          
+        }        
+      }.bind(this),
       step: function (results, parser) {
         if(results.data[0][0] === '' && arr.length) {
 
@@ -40,7 +57,7 @@ export class FuncVisibility {
             var row = arr[i];
             var lat = +row[0];
             var lng = +row[1];
-            var value = optionsLine.text = +row[2];
+            var value = +row[2];
             var latlng = L.latLng(lat, lng);
 
             if(i === 0) {
@@ -49,19 +66,27 @@ export class FuncVisibility {
               var lastlng = (latlngs[latlngs.length - 1]).lng;
               var extend = Math.abs(lng - lastlng);
               if(extend >= 180) { //解决经度范围超过180连线异常
-                if(this._map.hasLayer(this._visibilityFeatureGroup)) {
-                  this._visibilityFeatureGroup.addLayer(L.polygon(latlngs, optionsArea));
-                  this._visibilityFeatureGroup.addLayer(L.polyline(latlngs, optionsLine));
+                // if(this._map.hasLayer(this._visibilityFeatureGroup)) {
+                //   this._visibilityFeatureGroup.addLayer(L.polygon(latlngs, optionsArea));
+                //   this._visibilityFeatureGroup.addLayer(L.polyline(latlngs, optionsLine));
+                // }
+                if (latlngs.length > 2) {
+                  allSplitLatLngs.push(latlngs);
+                  allSplitTxt.push(value);
                 }
                 latlngs = [];
                 latlngs.push(latlng);
               } else {
                 latlngs.push(latlng);
                 if(i === len - 1) {
-                  if(this._map.hasLayer(this._visibilityFeatureGroup)) {
-                    this._visibilityFeatureGroup.addLayer(L.polygon(latlngs, optionsArea));
-                    this._visibilityFeatureGroup.addLayer(L.polyline(latlngs, optionsLine));
-                  }
+                  // if(this._map.hasLayer(this._visibilityFeatureGroup)) {
+                  //   this._visibilityFeatureGroup.addLayer(L.polygon(latlngs, optionsArea));
+                  //   this._visibilityFeatureGroup.addLayer(L.polyline(latlngs, optionsLine));
+                  // }
+                if (latlngs.length > 2) {
+                  allSplitLatLngs.push(latlngs);
+                  allSplitTxt.push(value);                  
+                }                  
                   latlngs = [];
                 }
               }

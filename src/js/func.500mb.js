@@ -21,10 +21,10 @@ export class Func500mb {
     };
     var arr = [];
 
-    if(this.pressureFeatureGroup && this._map.hasLayer(this.pressureFeatureGroup)) {
-      this._map.removeLayer(this.pressureFeatureGroup);
+    if(this._500mbFeatureGroup && this._map.hasLayer(this._500mbFeatureGroup)) {
+      this._map.removeLayer(this._500mbFeatureGroup);
     }
-    this.pressureFeatureGroup = L.featureGroup([]).addTo(this._map);
+    this._500mbFeatureGroup = L.featureGroup([]).addTo(this._map);
 
     Papa.parse('./static/data/500mb.csv', {
       download: true,
@@ -49,30 +49,30 @@ export class Func500mb {
               var lastlng = (latlngs[latlngs.length - 1]).lng;
               var extend = Math.abs(lng - lastlng);
               if(extend >= 180) { //解决经度范围超过180连线异常
-                if(this._map.hasLayer(this.pressureFeatureGroup) && latlngs.length > 2) {
-                  let geo = L.polyline(latlngs, options).toGeoJSON();
-                  let curved = turf.bezier(geo, 10000, 0.85);
-                  let newlatlngs = [];
-                  for(let i = 0, len = curved.geometry.coordinates.length; i < len; i++) {
-                    newlatlngs.push(L.latLng(curved.geometry.coordinates[i][1], curved.geometry.coordinates[i][0]));
-                  }
-                  this.pressureFeatureGroup.addLayer(L.polyline(newlatlngs, options));
-                  // this.pressureFeatureGroup.addLayer(L.polyline(latlngs, options));
+                if(this._map.hasLayer(this._500mbFeatureGroup) && latlngs.length > 2) {
+                  // let geo = L.polyline(latlngs, options).toGeoJSON();
+                  // let curved = turf.bezier(geo, 10000, 0.85);
+                  // let newlatlngs = [];
+                  // for(let i = 0, len = curved.geometry.coordinates.length; i < len; i++) {
+                  //   newlatlngs.push(L.latLng(curved.geometry.coordinates[i][1], curved.geometry.coordinates[i][0]));
+                  // }
+                  // this._500mbFeatureGroup.addLayer(L.polyline(newlatlngs, options));
+                  this._500mbFeatureGroup.addLayer(L.polyline(latlngs, options));
                 }
                 latlngs = [];
                 latlngs.push(latlng);
               } else {
                 latlngs.push(latlng);
                 if(i === len - 1) {
-                  if(this._map.hasLayer(this.pressureFeatureGroup) && latlngs.length > 2) {
-                    let geo = L.polyline(latlngs, options).toGeoJSON();
-                    let curved = turf.bezier(geo, 10000, 0.85);
-                    let newlatlngs = [];
-                    for(let i = 0, len = curved.geometry.coordinates.length; i < len; i++) {
-                      newlatlngs.push(L.latLng(curved.geometry.coordinates[i][1], curved.geometry.coordinates[i][0]));
-                    }
-                    this.pressureFeatureGroup.addLayer(L.polyline(newlatlngs, options));
-                    // this.pressureFeatureGroup.addLayer(L.polyline(latlngs, options));
+                  if(this._map.hasLayer(this._500mbFeatureGroup) && latlngs.length > 2) {
+                    // let geo = L.polyline(latlngs, options).toGeoJSON();
+                    // let curved = turf.bezier(geo, 10000, 0.85);
+                    // let newlatlngs = [];
+                    // for(let i = 0, len = curved.geometry.coordinates.length; i < len; i++) {
+                    //   newlatlngs.push(L.latLng(curved.geometry.coordinates[i][1], curved.geometry.coordinates[i][0]));
+                    // }
+                    // this._500mbFeatureGroup.addLayer(L.polyline(newlatlngs, options));
+                    this._500mbFeatureGroup.addLayer(L.polyline(latlngs, options));
                   }
                   latlngs = [];
                 }
@@ -93,8 +93,8 @@ export class Func500mb {
   }
 
   stop　() {
-    if(this._map.hasLayer(this.pressureFeatureGroup)) {
-      this._map.removeLayer(this.pressureFeatureGroup);
+    if(this._map.hasLayer(this._500mbFeatureGroup)) {
+      this._map.removeLayer(this._500mbFeatureGroup);
     }
   }
 }

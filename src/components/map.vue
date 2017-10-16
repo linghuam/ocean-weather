@@ -15,8 +15,8 @@ export default {
     var map = L.map('map', {
       minZoom: 2,
       maxZoom: 18,
-      zoom: 4,
-      center: [24, 106],
+      zoom: 6,
+      center: [23.473323877771172, 134.42871093750003],
       worldCopyJump:true,
       // maxBounds:L.latLngBounds(L.latLng(-90,-540),L.latLng(90,540))
     });
