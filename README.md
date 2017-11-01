@@ -43,6 +43,8 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 https://www.windy.com
 https://github.com/windyty/API
 1、全球跨180度展示  worldCopyJump:true 【完成，但有问题：每次只能显示一个，不能同时显示多个】
+[https://github.com/Leaflet/Leaflet/pull/1293](https://github.com/Leaflet/Leaflet/pull/1293)
+[polyline/polygon跨180度就近绘制算法](https://github.com/Leaflet/Leaflet/pull/1293/commits/66b5054b21646fa835b99d47c94bfbb0e8b42062)
 2、风的动态效果 【完成】
 3、跟宝船网类似
 4、线光滑 【完成】 http://turfjs.org/docs/#bezier
