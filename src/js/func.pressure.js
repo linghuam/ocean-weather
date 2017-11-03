@@ -6,6 +6,9 @@ export class FuncPressure {
 
   constructor(map) {
     this._map = map;
+  }
+
+  start() {    
     this._renderer = new LineTextCanvas();
     this._lineOptions = {
       renderer: this._renderer,
@@ -16,10 +19,7 @@ export class FuncPressure {
       text: '',
       // noClip:true,
       // smoothFactor:0.1
-    };    
-  }
-
-  start() {
+    };        
     Papa.parse('./static/data/pressure.csv', {
       download: true,
       header: false,

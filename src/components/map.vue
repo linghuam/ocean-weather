@@ -34,6 +34,7 @@ export default {
         html.push('<span>lng：' + latlng.lng + '&nbsp&nbsplat：' + latlng.lat + '</span><br>');
         html.push('<span>layerPoint:[' + layerpoint.x + ',' + layerpoint.y + ']</span><br>');
         html.push('<span>containerPoint:[' + containerpoint.x + ',' + containerpoint.y + ']</span><br>');
+        html.push('<span>zoomLevel:' + map.getZoom() +'</span><br>');
         html = html.join('');
         if(attrcontrol) {
             var container = attrcontrol.getContainer();

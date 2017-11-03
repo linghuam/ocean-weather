@@ -1,0 +1,61 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const d3 = require('d3-queue');
+const path = require('path');
+const load = require('load-json-file');
+const ProgressBar = require('progress');
+const documentation = require('documentation');
+
+const q = d3.queue(1);
+const postfix = fs.readFileSync(path.join(__dirname, 'postfix.md'), 'utf8');
+const packages = path.join(__dirname, '..', 'packages') + path.sep;
+const bar = new ProgressBar('  progress [:bar] :rate/bps :percent :etas', {
+    complete: '=',
+    incomplete: ' ',
+    width: 20,
+    total: fs.readdirSync(packages).length
+});
+
+fs.readdirSync(packages).forEach(directory => {
+    q.defer(generateDocs, packages + directory);
+});
+
+const paths = {
+    GeoJSON: 'http://geojson.org/geojson-spec.html#geojson-objects',
+    GeometryCollection: 'http://geojson.org/geojson-spec.html#geometrycollection',
+    Point: 'http://geojson.org/geojson-spec.html#point',
+    MultiPoint: 'http://geojson.org/geojson-spec.html#multipoint',
+    LineString: 'http://geojson.org/geojson-spec.html#linestring',
+    MultiLineString: 'http://geojson.org/geojson-spec.html#multilinestring',
+    Polygon: 'http://geojson.org/geojson-spec.html#polygon',
+    MultiPolygon: 'http://geojson.org/geojson-spec.html#multipolygon',
+    Geometry: 'http://geojson.org/geojson-spec.html#geometry',
+    Feature: 'http://geojson.org/geojson-spec.html#feature-objects',
+    FeatureCollection: 'http://geojson.org/geojson-spec.html#feature-collection-objects'
+};
+
+function generateDocs(directory, callback) {
+    const pkgPath = path.join(directory, 'package.json');
+    if (!fs.existsSync(pkgPath)) {
+        bar.tick();
+        return callback(null);
+    }
+    const {name, main} = load.sync(pkgPath);
+    const pkgMain = path.join(directory, main);
+
+    // Build Documentation
+    documentation.build(pkgMain, { }, (error, res) => {
+        if (error) throw new Error(error);
+        if (res === undefined) { console.log(directory); }
+
+        // Format Markdown
+        documentation.formats.md(res, {paths}, (error, markdown) => {
+            if (error) throw new Error(error);
+            markdown = `# ${name}\n\n${markdown}${postfix.replace(/{module}/, name)}`;
+            fs.writeFileSync(path.join(directory, 'README.md'), markdown);
+            bar.tick();
+            callback(null);
+        });
+    });
+}

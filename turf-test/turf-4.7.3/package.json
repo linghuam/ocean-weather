@@ -1,0 +1,69 @@
+{
+  "private": true,
+  "version": "4.0.0",
+  "description": "a node.js library for performing geospatial operations with geojson",
+  "scripts": {
+    "test": "npm run lint && lerna bootstrap && tap packages/*/test.js && npm run types",
+    "lint": "eslint packages/turf-*/index.js",
+    "postlint": "documentation lint packages/turf-*/index.js",
+    "types": "tsc",
+    "docs": "node ./scripts/generate-readmes"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/turfjs/turf.git"
+  },
+  "keywords": [
+    "gis",
+    "geo",
+    "geojs",
+    "geospatial",
+    "geography",
+    "geometry",
+    "map",
+    "contour",
+    "centroid",
+    "tin",
+    "extent",
+    "geojson",
+    "grid",
+    "polygon",
+    "line",
+    "point",
+    "area",
+    "analysis",
+    "statistics",
+    "stats",
+    "midpoint",
+    "plane",
+    "quantile",
+    "jenks",
+    "sample"
+  ],
+  "author": "morganherlocker",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Turfjs/turf/issues"
+  },
+  "devDependencies": {
+    "@types/geojson": "0.0.31",
+    "@types/node": "^6.0.56",
+    "@types/tape": "^4.2.30",
+    "browserify": "^13.0.0",
+    "camelcase": "^4.1.0",
+    "d3-queue": "3.0.1",
+    "decamelize": "^1.2.0",
+    "documentation": "4.0.0-beta7",
+    "eslint": "2.0.0",
+    "eslint-config-mourner": "2.0.0",
+    "fs-extra": "^4.0.0",
+    "lerna": "2.0.0-beta.34",
+    "load-json-file": "^2.0.0",
+    "meow": "^3.7.0",
+    "progress": "^2.0.0",
+    "tap": "^10.3.2",
+    "tape": "^4.6.3",
+    "typescript": "^2.4.1",
+    "uglify-js": "~2.4.16"
+  }
+}

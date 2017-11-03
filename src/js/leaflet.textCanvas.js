@@ -1,13 +1,11 @@
 /*
  * 线写文字 canvas
  */
-var LineTextCanvas = L.Canvas.extend({
+export var LineTextCanvas = L.Canvas.extend({
 
   _updatePoly: function (layer, closed) {
     L.Canvas.prototype._updatePoly.call(this, layer, closed);
-    if(layer.options.text) {
-      this._text(layer, closed);
-    }
+    this._updateText(layer, closed);
   },
 
   /*
@@ -19,11 +17,21 @@ var LineTextCanvas = L.Canvas.extend({
     L.DomUtil.remove(this._container);
   },
 
-  _text: function (layer, closed) {
-    var ctx = this._ctx,
-      text = layer.options.text,
-      parts = layer._parts,
-      map = this._map;
+  _updateText: function (layer, closed) {
+    var ctx = this._ctx;
+    var text = layer.options.text || '';
+    var parts = layer._parts;
+    var map = this._map;
+    var zoom = this._map.getZoom(); // 当前级别
+    
+    // 根据级别进行数据抽稀
+    if (zoom < 3) {
+
+    } else if (zoom >= 3 && zoom < 5){
+
+    } else {
+
+    }
     if(!parts.length) {
       return;
     }
@@ -43,7 +51,7 @@ var LineTextCanvas = L.Canvas.extend({
     } catch(ex) {
       var width = this._container.width;
       var height = this._container.height;
-      ctx.clearRect(0, 0, width * 2, height * 2);
+      // ctx.clearRect(0, 0, width * 2, height * 2);
     }
   }
 });
@@ -51,7 +59,7 @@ var LineTextCanvas = L.Canvas.extend({
 /*
  * 矩形内写文字 canvas
  */
-var RectTextCanvas = L.Canvas.extend({
+export var RectTextCanvas = L.Canvas.extend({
 
   initialize: function (options) {
     L.Canvas.prototype.initialize.call(this, options);
@@ -81,8 +89,3 @@ var RectTextCanvas = L.Canvas.extend({
   }
 });
 
-
-export {
-  LineTextCanvas,
-  RectTextCanvas
-}
