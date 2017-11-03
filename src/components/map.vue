@@ -13,15 +13,23 @@ export default {
   },
   mounted() {
     var map = L.map('map', {
-      minZoom: 2,
+      minZoom: 1,
       maxZoom: 18,
-      zoom: 6,
+      zoom: 2,
       center: [23.473323877771172, 134.42871093750003],
       worldCopyJump:true,
       // maxBounds:L.latLngBounds(L.latLng(-90,-540),L.latLng(90,540))
     });
     new GoogleLayer('http://mt2.google.cn/vt/lyrs=m&hl=zh-CN&gl=cn&s=Gal&z={z}&x={x}&y={y}').addTo(map);
     this.$parent.$data.map = map;
+    // test -start
+    var area = [[28, 116],[28, -116],[20, -116],[20, 116]];
+    var area1 = [[28, 116+360],[28, -116+360],[20, -116+360],[20, 116+360]];
+    var area2 = [[28, 116-360],[28, -116-360],[20, -116-360],[20, 116-360]];
+    L.polygon(area, {fillColor:'#f00'}).addTo(map);
+    L.polygon(area1, {fillColor:'#0f0'}).addTo(map);
+    L.polygon(area2, {fillColor:'#00f'}).addTo(map);
+    // test -end
   }
 };
 
