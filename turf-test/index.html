@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>turf</title>
+	<script type="text/javascript" src="https://npmcdn.com/@turf/turf@4.7.3/turf.min.js"></script>
+</head>
+<body>
+<div id="content"></div>
+<script type="text/javascript">
+	var ele = document.getElementById('content');
+	var line = turf.lineString([[179+360, 0], [-179, 0], [-178, 0]]);
+    var chunk = turf.lineChunk(line, 100, 'kilometers');
+</script>
+</body>
+</html>

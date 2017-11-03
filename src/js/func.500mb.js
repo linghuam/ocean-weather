@@ -1,6 +1,6 @@
 import Papa from 'papaparse'
 import { LineTextCanvas } from './leaflet.textCanvas'
-import turf from 'turf'
+// import turf from 'turf'
 
 export class Func500mb {
 

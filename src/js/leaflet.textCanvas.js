@@ -23,6 +23,11 @@ export var LineTextCanvas = L.Canvas.extend({
     var parts = layer._parts;
     var map = this._map;
     var zoom = this._map.getZoom(); // 当前级别
+
+    // 线分段算法
+    var geojson = layer.toGeoJSON();
+    var chunk = turf.lineChunk(geojson, 10, 'kilometers');
+    // L.geoJSON(chunk).addTo(map);
     
     // 根据级别进行数据抽稀
     if (zoom < 3) {
