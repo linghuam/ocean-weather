@@ -22,13 +22,31 @@ export default {
     });
     new GoogleLayer('http://mt2.google.cn/vt/lyrs=m&hl=zh-CN&gl=cn&s=Gal&z={z}&x={x}&y={y}').addTo(map);
     this.$parent.$data.map = map;
+
+    // add control
+    var attrcontrol = L.control.attribution({ position: 'topright', prefix: false }).addTo(map);
+    // map events 
+    map.on("mousemove", function (e) {
+        var latlng = e.latlng;
+        var layerpoint = e.layerPoint;
+        var containerpoint = e.containerPoint;
+        var html = [];
+        html.push('<span>lng：' + latlng.lng + '&nbsp&nbsplat：' + latlng.lat + '</span><br>');
+        html.push('<span>layerPoint:[' + layerpoint.x + ',' + layerpoint.y + ']</span><br>');
+        html.push('<span>containerPoint:[' + containerpoint.x + ',' + containerpoint.y + ']</span><br>');
+        html = html.join('');
+        if(attrcontrol) {
+            var container = attrcontrol.getContainer();
+            $(container).html(html);
+        }
+    }, this);    
     // test -start
-    var area = [[28, 116],[28, -116],[20, -116],[20, 116]];
-    var area1 = [[28, 116+360],[28, -116+360],[20, -116+360],[20, 116+360]];
-    var area2 = [[28, 116-360],[28, -116-360],[20, -116-360],[20, 116-360]];
-    L.polygon(area, {fillColor:'#f00'}).addTo(map);
-    L.polygon(area1, {fillColor:'#0f0'}).addTo(map);
-    L.polygon(area2, {fillColor:'#00f'}).addTo(map);
+    // var area = [[28, 116],[28, -116],[20, -116],[20, 116]];
+    // var area1 = [[28, 116+360],[28, -116+360],[20, -116+360],[20, 116+360]];
+    // var area2 = [[28, 116-360],[28, -116-360],[20, -116-360],[20, 116-360]];
+    // L.polygon(area, {fillColor:'#f00'}).addTo(map);
+    // L.polygon(area1, {fillColor:'#0f0'}).addTo(map);
+    // L.polygon(area2, {fillColor:'#00f'}).addTo(map);
     // test -end
   }
 };
