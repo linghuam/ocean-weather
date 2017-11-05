@@ -24,11 +24,24 @@ export var LineTextCanvas = L.Canvas.extend({
     var map = this._map;
     var zoom = this._map.getZoom(); // 当前级别
 
-    // 线分段算法
-    var geojson = layer.toGeoJSON();
-    var chunk = turf.lineChunk(geojson, 10, 'kilometers');
+    // 线分段算法 【性能不佳】
+    // var geojson = layer.toGeoJSON();
+    // var chunk = turf.lineChunk(geojson, 100, 'kilometers');
     // L.geoJSON(chunk).addTo(map);
-    
+    //
+    //
+    // console.time('turf');
+    // var latlngs = layer.getChunkLatlngs();
+    // console.timeEnd('turf');
+    // for (var i = 0, len = latlngs.length; i < len; i++){
+    //   var pt = map.latLngToLayerPoint(latlngs[i]);
+    //   this._drawText(ctx, text, pt);
+    // }
+    //
+    //
+    var pt = map.latLngToLayerPoint(layer.getCenter());
+    this._drawText(ctx, text, pt);
+
     // 根据级别进行数据抽稀
     if (zoom < 3) {
 
@@ -37,12 +50,9 @@ export var LineTextCanvas = L.Canvas.extend({
     } else {
 
     }
-    if(!parts.length) {
-      return;
-    }
-    try {
-      var center = layer.getCenter();
-      var pt = map.latLngToLayerPoint(center);
+  },
+
+  _drawText: function (ctx, text, pt) {
       ctx.save();
       ctx.textAlign = 'start';
       ctx.textBaseline = 'middle';
@@ -53,11 +63,6 @@ export var LineTextCanvas = L.Canvas.extend({
       ctx.strokeText(text, pt.x, pt.y);
       ctx.fillText(text, pt.x, pt.y);
       ctx.restore();
-    } catch(ex) {
-      var width = this._container.width;
-      var height = this._container.height;
-      // ctx.clearRect(0, 0, width * 2, height * 2);
-    }
   }
 });
 

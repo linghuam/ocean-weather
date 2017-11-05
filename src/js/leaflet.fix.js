@@ -7,6 +7,7 @@ L.LatLng.prototype.getAdd360LatLng = function () {
 };
 
 L.Polyline.addInitHook(function () {
+
   this._caculateMeridian = function (latLngA, latLngB) {
     //  var is = this.isCrossMeridian(latLngA, latLngB);
     var is = true;
@@ -68,5 +69,30 @@ L.Polyline.addInitHook(function () {
       pxBounds.max._add(p);
       this._pxBounds = pxBounds;
     }
+  };
+
+  this.getChunkLatlngs = function () {
+      var results = [];
+      var geojson = this.toGeoJSON();
+      var length = turf.lineDistance(geojson, 'kilometers');
+      var center = this.getCenter();
+      var points = this._rings[0];
+      var stlatlng = this._map.layerPointToLatLng(points[0]);
+      var edlatlng = this._map.layerPointToLatLng(points[points.length - 1]);
+      if (length > 50000) {
+          var start1 = turf.point([stlatlng.lng, stlatlng.lat]);
+          var start2 = turf.point([center.lng, center.lat]);
+          var stop  = turf.point([edlatlng.lng, edlatlng.lat]);
+          var slice1 = turf.lineSlice(start1, start2, geojson);
+          var slice2 = turf.lineSlice(start2, stop, geojson);
+          var c1 =  turf.getCoord( turf.centroid(slice1) );
+          var c2 = turf.getCoord( turf.centroid(slice2) );
+          results.push( L.latLng(c1[1], c1[0]) );
+          results.push( center );
+          results.push( L.latLng(c2[1], c2[0]) );
+      } else {
+        results.push(center);
+      }
+      return results;
   };
 });

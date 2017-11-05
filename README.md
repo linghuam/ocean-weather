@@ -85,3 +85,5 @@ https://www.patrick-wied.at/static/heatmapjs/?utm_source=npm_leaflet&utm_medium=
 mb=mbar 毫巴(=百帕)
 
 1Bar=0.1MPa=1000mba=1000hpa=100*7.5mmhg=75mmhg=1个大气压
+
+地球周长： 40042.739962655505 （公里）
