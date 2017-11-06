@@ -44,7 +44,7 @@ export var PressureLayer = CanvasLayer.extend({
     console.time('clip');
     var features = geoJson.features;
     var feature;
-    for (var i = 0, len = features.length; i < len; i++){
+    for (let i = 0, len = features.length; i < len; i++){
       feature =  features[i];
       this._clipLand(info.canvas, ctx, map, feature);
     }
@@ -88,14 +88,23 @@ export var PressureLayer = CanvasLayer.extend({
   },
 
   _clipLand:function (canvas, ctx, map, feature){
+    var coords = [];
     if (feature.geometry.type === 'Polygon'){
-      var coords = feature.geometry.coordinates[0];
+      coords = feature.geometry.coordinates[0];
+      this._drawClip(canvas, ctx, map, coords);
     } else if (feature.geometry.type === 'MultiPolygon'){
-        var coords = feature.geometry.coordinates[0][0];
+      var lines = feature.geometry.coordinates;
+      for (let i = 0, len = lines.length; i < len; i++){
+        coords = lines[i][0];
+        this._drawClip(canvas, ctx, map, coords);
+      }
     }
+  },
+
+  _drawClip: function (canvas, ctx, map, coords) {
     ctx.save();
     ctx.beginPath();
-    for (var i = 0 , len = coords.length; i < len; i++) {
+    for (let i = 0 , len = coords.length; i < len; i++) {
       var pt = map.latLngToContainerPoint(L.latLng(coords[i][1], coords[i][0]));
       i === 0 ? ctx.moveTo(pt.x, pt.y) : ctx.lineTo(pt.x, pt.y);
     }
