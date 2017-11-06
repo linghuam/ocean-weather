@@ -25,39 +25,75 @@ export var PressureLayer = CanvasLayer.extend({
 
   onDrawLayer: function (info) {
     // -- custom  draw
-    var ctx = info.canvas.getContext('2d');
-    var map = info.layer._map;
+    var ctx = this._ctx = info.canvas.getContext('2d');
+    var map = this._map = info.layer._map;
     var data = this._data;
-    var points , text;
+    var points , lpoints, rpoints, text;
     if(!data.length) {
       return;
     }
     ctx.clearRect(0, 0, info.canvas.width, info.canvas.height);
     for(let i = 0, len = data.length; i < len; i++) {
       points = this.getPoints(map, data[i]);
+      lpoints = this.getLeft360Points(map, data[i]);
+      rpoints = this.getRight360Points(map, data[i]);
       text = data[i][0][2];
       this._drawLine(ctx, points);
       this._drawText(ctx, points[Math.floor(points.length / 2)] ,text);
+      this._drawLine(ctx, lpoints);
+      this._drawText(ctx, lpoints[Math.floor(points.length / 2)] ,text);
+      this._drawLine(ctx, rpoints);
+      this._drawText(ctx, rpoints[Math.floor(points.length / 2)] ,text);
     }
 
     // clip
-    console.time('clip');
-    var features = geoJson.features;
-    var feature;
-    for (let i = 0, len = features.length; i < len; i++){
-      feature =  features[i];
-      this._clipLand(info.canvas, ctx, map, feature);
-    }
-    console.timeEnd('clip');
+    this._clip(info.canvas, ctx, map);
   },
 
   getPoints (map, data) {
     // 待处理问题..... 跨180度
     var pts = [];
-    var latlng;
+    var latlngs = [], latlng;
     for (let i = 0, len = data.length; i < len; i++){
       latlng = L.latLng(data[i][0], data[i][1]);
-      pts.push( map.latLngToContainerPoint(latlng));
+      latlngs.push(latlng);
+    }
+    // 转化
+    latlngs = this._legelLatLngs(latlngs);
+    for (let i = 0, len = latlngs.length; i < len; i++){
+      pts.push( map.latLngToContainerPoint(latlngs[i]));
+    }
+    return pts;
+  },
+
+  getLeft360Points (map, data) {
+    // 待处理问题..... 跨180度
+    var pts = [];
+    var latlngs = [], latlng;
+    for (let i = 0, len = data.length; i < len; i++){
+      latlng = L.latLng(data[i][0], Number(data[i][1]) - 360);
+      latlngs.push(latlng);
+    }
+    // 转化
+    latlngs = this._legelLatLngs(latlngs);
+    for (let i = 0, len = latlngs.length; i < len; i++){
+      pts.push( map.latLngToContainerPoint(latlngs[i]));
+    }
+    return pts;
+  },
+
+  getRight360Points (map, data) {
+    // 待处理问题..... 跨180度
+    var pts = [];
+    var latlngs = [], latlng;
+    for (let i = 0, len = data.length; i < len; i++){
+      latlng = L.latLng(data[i][0], Number(data[i][1]) + 360);
+      latlngs.push(latlng);
+    }
+    // 转化
+    latlngs = this._legelLatLngs(latlngs);
+    for (let i = 0, len = latlngs.length; i < len; i++){
+      pts.push( map.latLngToContainerPoint(latlngs[i]));
     }
     return pts;
   },
@@ -87,6 +123,18 @@ export var PressureLayer = CanvasLayer.extend({
     ctx.restore();
   },
 
+ // 剪掉陆地部分
+  _clip: function (canvas, ctx, map){
+    console.time('clip');
+    var features = geoJson.features;
+    var feature;
+    for (let i = 0, len = features.length; i < len; i++){
+      feature =  features[i];
+      this._clipLand(canvas, ctx, map, feature);
+    }
+    console.timeEnd('clip');
+  },
+
   _clipLand:function (canvas, ctx, map, feature){
     var coords = [];
     if (feature.geometry.type === 'Polygon'){
@@ -102,16 +150,73 @@ export var PressureLayer = CanvasLayer.extend({
   },
 
   _drawClip: function (canvas, ctx, map, coords) {
+    var pt , lpt, rpt;
     ctx.save();
     ctx.beginPath();
     for (let i = 0 , len = coords.length; i < len; i++) {
-      var pt = map.latLngToContainerPoint(L.latLng(coords[i][1], coords[i][0]));
+      pt = map.latLngToContainerPoint(L.latLng(coords[i][1], coords[i][0]));
       i === 0 ? ctx.moveTo(pt.x, pt.y) : ctx.lineTo(pt.x, pt.y);
+    }
+    ctx.closePath();
+    for (let i = 0 , len = coords.length; i < len; i++) {
+      lpt = map.latLngToContainerPoint(L.latLng(coords[i][1], Number(coords[i][0]) - 360));
+      i === 0 ? ctx.moveTo(lpt.x, lpt.y) : ctx.lineTo(lpt.x, lpt.y);
+    }
+    ctx.closePath();
+    for (let i = 0 , len = coords.length; i < len; i++) {
+      rpt = map.latLngToContainerPoint(L.latLng(coords[i][1], Number(coords[i][0]) + 360));
+      i === 0 ? ctx.moveTo(rpt.x, rpt.y) : ctx.lineTo(rpt.x, rpt.y);
     }
     ctx.closePath();
     ctx.clip();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.restore();
+  },
+
+ // 计算跨180度问题
+  _caculateMeridian: function (latLngA, latLngB) {
+    //  var is = this.isCrossMeridian(latLngA, latLngB);
+    var is = true;
+    if(is) {
+      var p = this._map.project(latLngA),
+        pb = latLngB,
+        pb1 = latLngB.getAdd360LatLng(),
+        pb2 = latLngB.getSubtract360LatLng(),
+        disb = p.distanceTo(this._map.project(pb)),
+        disb1 = p.distanceTo(this._map.project(pb1)),
+        disb2 = p.distanceTo(this._map.project(pb2)),
+        min = Math.min(disb, disb1, disb2);
+      if(min === disb) {
+        return pb;
+      } else if(min === disb1) {
+        return pb1;
+      } else {
+        return pb2;
+      }
+    } else {
+      return latLngB;
+    }
+  },
+
+  _legelLatLngs : function (latlngs) {
+    var result = [],
+      flat = latlngs[0] instanceof L.LatLng,
+      len = latlngs.length,
+      i;
+    for(i = 0; i < len; i++) {
+      if(flat) {
+        var tempi = latlngs[i];
+        if(i >= 1) {
+          var tempibefore = result[i - 1];
+          result[i] = this._caculateMeridian(tempibefore, tempi);
+        } else {
+          result[i] = tempi;
+        }
+      } else {
+        result[i] = this._legelLatLngs(latlngs[i]);
+      }
+    }
+    return result;
   }
 
 });
