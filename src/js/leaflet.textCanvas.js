@@ -1,3 +1,5 @@
+import geoJson from '../assets/outline.json'
+
 /*
  * 线写文字 canvas
  */
@@ -6,6 +8,7 @@ export var LineTextCanvas = L.Canvas.extend({
   _updatePoly: function (layer, closed) {
     L.Canvas.prototype._updatePoly.call(this, layer, closed);
     this._updateText(layer, closed);
+    this._updateOutLine(layer);
   },
 
   /*
@@ -63,6 +66,58 @@ export var LineTextCanvas = L.Canvas.extend({
       ctx.strokeText(text, pt.x, pt.y);
       ctx.fillText(text, pt.x, pt.y);
       ctx.restore();
+  },
+
+  _updateOutLine: function (layer) {
+    var ctx = this._ctx;
+    var map = this._map;
+
+    // test -start
+    // var pt = map.latLngToLayerPoint(layer.getCenter());
+    // ctx.save();
+    // ctx.beginPath();
+    // ctx.moveTo(pt.x ,pt.y);
+    // ctx.lineTo(pt.x + 40, pt.y);
+    // ctx.lineTo(pt.x + 40, pt.y + 40);
+    // ctx.lineTo(pt.x, pt.y + 40);
+    // ctx.closePath();
+    // ctx.clip();
+    // ctx.clearRect(0, 0, this._container.width *2, this._container.height *2);
+    // ctx.restore();
+    // test -end
+
+    // $.getJSON('./static/data/outline.json', function (geojson){
+    //   L.geoJSON(geojson).addTo(map);
+    // });
+      // 可行，但每次绘制一个图形要执行clip，浪费时间，所以要自己实现绘制类
+      console.time('clip');
+      var features = geoJson.features;
+      var feature;
+      for (var i = 0, len = features.length; i < len; i++){
+        feature =  features[i];
+        this._clearFeatureArea(feature);
+      }
+      console.timeEnd('clip');
+  },
+
+  _clearFeatureArea: function (feature) {
+    var ctx = this._ctx;
+    var map = this._map;
+    if (feature.geometry.type === 'Polygon'){
+      var coords = feature.geometry.coordinates[0];
+    } else if (feature.geometry.type === 'MultiPolygon'){
+        var coords = feature.geometry.coordinates[0][0];
+    }
+    ctx.save();
+    ctx.beginPath();
+    for (var i = 0 , len = coords.length; i < len; i++) {
+      var pt = map.latLngToLayerPoint(L.latLng(coords[i][1], coords[i][0]));
+      i === 0 ? ctx.moveTo(pt.x, pt.y) : ctx.lineTo(pt.x, pt.y);
+    }
+    ctx.closePath();
+    ctx.clip();
+    ctx.clearRect(0, 0, this._container.width *2, this._container.height *2);
+    ctx.restore();
   }
 });
 
@@ -98,4 +153,3 @@ export var RectTextCanvas = L.Canvas.extend({
     ctx.fillText(text, pt.x, pt.y);
   }
 });
-
