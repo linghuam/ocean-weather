@@ -3,6 +3,10 @@ import geoJson from '../assets/outline.json'
 
 export var PressureLayer = CanvasLayer.extend({
 
+  options:{
+    isclip:false
+  },
+
   initialize: function (options, config) {
     CanvasLayer.prototype.initialize.call(this, options);
     this.cfg = config;
@@ -39,15 +43,17 @@ export var PressureLayer = CanvasLayer.extend({
       rpoints = this.getRight360Points(map, data[i]);
       text = data[i][0][2];
       this._drawLine(ctx, points);
-      this._drawText(ctx, points[Math.floor(points.length / 2)] ,text);
       this._drawLine(ctx, lpoints);
-      this._drawText(ctx, lpoints[Math.floor(points.length / 2)] ,text);
       this._drawLine(ctx, rpoints);
+      this._drawText(ctx, points[Math.floor(points.length / 2)] ,text);
+      this._drawText(ctx, lpoints[Math.floor(points.length / 2)] ,text);
       this._drawText(ctx, rpoints[Math.floor(points.length / 2)] ,text);
     }
 
     // clip
-    this._clip(info.canvas, ctx, map);
+    if (this.options.isclip){
+      this._clip(info.canvas, ctx, map);
+    }
   },
 
   getPoints (map, data) {
