@@ -1,6 +1,7 @@
 import Papa from 'papaparse'
 import { LineTextCanvas } from './leaflet.textCanvas'
 // import turf from 'turf'
+import {PressureLayer} from './leaflet.pressurelayer'
 
 export class FuncPressure {
 
@@ -8,7 +9,7 @@ export class FuncPressure {
     this._map = map;
   }
 
-  start() {    
+  start() {
     this._renderer = new LineTextCanvas();
     this._lineOptions = {
       renderer: this._renderer,
@@ -19,7 +20,7 @@ export class FuncPressure {
       text: '',
       // noClip:true,
       // smoothFactor:0.1
-    };        
+    };
     Papa.parse('./static/data/pressure.csv', {
       download: true,
       header: false,
@@ -39,7 +40,7 @@ export class FuncPressure {
   getDataCallback (data) {
     // split data by line
     var newData = [];
-    var temp = [];    
+    var temp = [];
     var i, len, latlngs, leftlatlngs, rightlatlngs;
     for (i = 0, len = data.length; i < len; i++){
         if (data[i].length === 1 || i === len-1) {
@@ -49,16 +50,22 @@ export class FuncPressure {
           temp.push(data[i]);
         }
     }
-    // draw line 
-    for (i = 0, len = newData.length; i < len; i++ ) {
-        latlngs = this.getLatLngs(newData[i]);
-        leftlatlngs = this.getLeftLatLngs(newData[i]);
-        rightlatlngs = this.getRightLatLngs(newData[i]);
-        this._lineOptions.text = this.getValue(newData[i]);
-        L.polyline(latlngs, this._lineOptions).addTo(this._map);
-        L.polyline(leftlatlngs, this._lineOptions).addTo(this._map);
-        L.polyline(rightlatlngs, this._lineOptions).addTo(this._map);
-    }
+    // draw line
+    // for (i = 0, len = newData.length; i < len; i++ ) {
+    //     latlngs = this.getLatLngs(newData[i]);
+    //     leftlatlngs = this.getLeftLatLngs(newData[i]);
+    //     rightlatlngs = this.getRightLatLngs(newData[i]);
+    //     this._lineOptions.text = this.getValue(newData[i]);
+    //     L.polyline(latlngs, this._lineOptions).addTo(this._map);
+    //     L.polyline(leftlatlngs, this._lineOptions).addTo(this._map);
+    //     L.polyline(rightlatlngs, this._lineOptions).addTo(this._map);
+    // }
+    //
+
+    // new
+    new PressureLayer({}, {
+      data: newData
+    }).addTo(this._map)
   }
 
   getLatLngs (data) {
@@ -89,7 +96,7 @@ export class FuncPressure {
       latlngs.push(latlng);
     }
     return latlngs;
-  }    
+  }
 
   getValue (data) {
     return data[0][2];
