@@ -1,5 +1,6 @@
 import Papa from 'papaparse'
 import { HeatmapOverlay } from './leafletHeatmap/leaflet-heatmap'
+import { TemperatureLayer } from './leaflet.temperaturelayer'
 
 export class FuncTemperature {
 
@@ -12,11 +13,28 @@ export class FuncTemperature {
       download: true,
       complete: function (results) {
         var data = results.data || [];
+        var newData = [];
+        var temp = [];
+        var i, len;
+        for (i = 0, len = data.length; i < len; i++){
+            if (data[i].length === 1 || i === len-1) {
+              if (temp.length >= 2) newData.push(temp);
+              temp = [];
+            } else {
+              temp.push(data[i]);
+            }
+        }
+        new TemperatureLayer({}, {
+          data:newData
+        }).addTo(this._map);
+
+        // heatmap
+        // var data = results.data || [];
         data = data.filter(function (value) {
           return value !== '' && value.length > 1;
         });
         var datacfg = {
-          max: 40,
+          max: 39,
           data: data
         };
 
@@ -30,7 +48,7 @@ export class FuncTemperature {
           // if set to false the heatmap uses the global maximum for colorization
           // if activated: uses the data maximum within the current map boundaries
           //   (there will always be a red spot with useLocalExtremas true)
-          "useLocalExtrema": true,
+          "useLocalExtrema": false,
           // which field name in your data represents the latitude - default "lat"
           latField: '0',
           // which field name in your data represents the longitude - default "lng"
