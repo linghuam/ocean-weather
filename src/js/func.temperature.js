@@ -35,11 +35,23 @@ export class FuncTemperature {
         data = data.filter(function (value) {
           return value !== '' && value.length > 1;
         });
+        var ldata = [], rdata = [];
+        for (let i = 0, len = data.length; i < len; i++){
+          ldata.push([data[i][0], data[i][1] - 360, data[i][2]]);
+          rdata.push([data[i][0], data[i][1] + 360, data[i][2]]);
+        }
         var datacfg = {
           max: 39,
           data: data
         };
-
+        var ldatacfg = {
+          max: 39,
+          data: ldata
+        };
+        var rdatacfg = {
+          max: 39,
+          data: rdata
+        };
         var cfg = {
           // radius should be small ONLY if scaleRadius is true (or small radius is intended)
           // if scaleRadius is false it will be the constant radius used in pixels
@@ -58,24 +70,34 @@ export class FuncTemperature {
           // which field name in your data represents the data value - default "value"
           valueField: '2'
         };
-        var heatmapLayer = this._tempratureLayer = new HeatmapOverlay(cfg);
-        heatmapLayer.setData(datacfg);
-        if(this._map.hasLayer(this._tempratureLayer)) {
-          this._map.removeLayer(this._tempratureLayer);
-        }
-        this._map.addLayer(heatmapLayer);
+        // var heatmapLayer = this._tempratureLayer = new HeatmapOverlay(cfg);
+        // heatmapLayer.setData(datacfg);
+        // var lheatmapLayer = this._tempratureLayer = new HeatmapOverlay(cfg);
+        // lheatmapLayer.setData(ldatacfg);
+        var rheatmapLayer = this._tempratureLayer = new HeatmapOverlay(cfg);
+        rheatmapLayer.setData(rdatacfg);
+        // if(this._map.hasLayer(this._tempratureLayer)) {
+        //   this._map.removeLayer(this._tempratureLayer);
+        // }
+        // this._map.addLayer(heatmapLayer);
+        // this._map.addLayer(lheatmapLayer);
+        this._map.addLayer(rheatmapLayer);
 
-        this._templayer._clip(heatmapLayer._heatmap._renderer.canvas, heatmapLayer._heatmap._renderer.ctx, this._map);
+        // this._templayer._clip(heatmapLayer._heatmap._renderer.canvas, heatmapLayer._heatmap._renderer.ctx, this._map);
+        // this._templayer._clip(lheatmapLayer._heatmap._renderer.canvas, lheatmapLayer._heatmap._renderer.ctx, this._map);
+        this._templayer._clip(rheatmapLayer._heatmap._renderer.canvas, rheatmapLayer._heatmap._renderer.ctx, this._map);
         this._map.on('moveend', function () {
-          this._templayer._clip(heatmapLayer._heatmap._renderer.canvas, heatmapLayer._heatmap._renderer.ctx, this._map);
+          // this._templayer._clip(heatmapLayer._heatmap._renderer.canvas, heatmapLayer._heatmap._renderer.ctx, this._map);
+          // this._templayer._clip(lheatmapLayer._heatmap._renderer.canvas, lheatmapLayer._heatmap._renderer.ctx, this._map);
+          this._templayer._clip(rheatmapLayer._heatmap._renderer.canvas, rheatmapLayer._heatmap._renderer.ctx, this._map);
         }, this);
       }.bind(this),
     });
   }
 
   stop　() {
-    if(this._map.hasLayer(this._tempratureLayer)) {
-      this._map.removeLayer(this._tempratureLayer);
-    }
+    // if(this._map.hasLayer(this._tempratureLayer)) {
+    //   this._map.removeLayer(this._tempratureLayer);
+    // }
   }
 }

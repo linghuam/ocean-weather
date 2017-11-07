@@ -31,6 +31,7 @@ export var TemperatureLayer = CanvasLayer.extend({
     // -- custom  draw
     var ctx = this._ctx = info.canvas.getContext('2d');
     var map = this._map = info.layer._map;
+    var zoom = map.getZoom();
     var data = this._data;
     var points , lpoints, rpoints, text;
     if(!data.length) {
@@ -45,9 +46,15 @@ export var TemperatureLayer = CanvasLayer.extend({
       this._drawLine(ctx, points);
       this._drawLine(ctx, lpoints);
       this._drawLine(ctx, rpoints);
-      this._drawText(ctx, points[Math.floor(points.length / 2)] ,text);
-      this._drawText(ctx, lpoints[Math.floor(points.length / 2)] ,text);
-      this._drawText(ctx, rpoints[Math.floor(points.length / 2)] ,text);
+      if (zoom < 3 && text > 30) {
+        // this._drawText(ctx, points[Math.floor(points.length / 2)] ,text);
+        // this._drawText(ctx, lpoints[Math.floor(points.length / 2)] ,text);
+        // this._drawText(ctx, rpoints[Math.floor(points.length / 2)] ,text);
+      } else if (zoom >= 3){
+        this._drawText(ctx, points[Math.floor(points.length / 2)] ,text);
+        this._drawText(ctx, lpoints[Math.floor(points.length / 2)] ,text);
+        this._drawText(ctx, rpoints[Math.floor(points.length / 2)] ,text);
+      }
     }
 
     // clip
