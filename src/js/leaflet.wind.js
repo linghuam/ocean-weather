@@ -115,8 +115,14 @@ export var WindLayer = CanvasLayer.extend({
 
   initialize: function (options, config) {
     CanvasLayer.prototype.initialize.call(this, options);
-    this.cfg = config;
-    this._data = config && config.data || [];
+    this.cfg = Object.assign({
+      lat: '0',
+      lng: '1',
+      value: '2',
+      dir: '3',
+      data: []
+    }, config);
+    this._data = this.cfg.data;
     this._sortData = this.sortByLat(this._data);
   },
 
@@ -142,8 +148,8 @@ export var WindLayer = CanvasLayer.extend({
     var map = this._map = info.layer._map;
     var zoom = map.getZoom();
     var sortData = this._sortData;
-    var latOffset = 1,
-      lngOffset = 1;
+    var latOffset = 1;
+    var lngOffset = 1;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -172,7 +178,7 @@ export var WindLayer = CanvasLayer.extend({
         dir = Number(latPts[j][this.cfg.dir]);
         windobj = new Wind(latlng, speed, dir);
         this.drawWind(ctx, windobj);
-        if(this.options.isDrawLeftRight) {
+        if(windobj.options.isDrawLeftRight) {
           lLatLng = latlng.getSubtract360LatLng();
           rLatLng = latlng.getAdd360LatLng();
           lwindobj = new Wind(lLatLng, speed, dir);
