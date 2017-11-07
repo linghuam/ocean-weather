@@ -5,7 +5,7 @@ export var WindLayer = CanvasLayer.extend({
   initialize: function (options, config) {
     CanvasLayer.prototype.initialize.call(this, options);
     this.cfg = config;
-    this._data = (config && config.data) || [];
+    this._data = config && config.data || [];
   },
 
   setData: function (data) {
@@ -24,20 +24,76 @@ export var WindLayer = CanvasLayer.extend({
 
   onDrawLayer: function (info) {
     // -- custom  draw
-    var ctx = info.canvas.getContext('2d');
-    var map = info.layer._map;
+    var ctx = this._ctx = info.canvas.getContext('2d');
+    var map = this._map = info.layer._map;
+    var zoom = map.getZoom();
     var data = this._data;
+    var sortData = this.sortByLat(data);
+    var latOffset = 1, lngOffset = 1;
     if(!data.length) {
       return;
     }
     ctx.clearRect(0, 0, info.canvas.width, info.canvas.height);
-    for(let i = 0, len = data.length; i < len; i++) {
-      var obj = data[i];
-      var latlng = L.latLng(obj[this.cfg.lat], obj[this.cfg.lng]);
-      var point = map.latLngToContainerPoint(latlng);
-      var level = obj[this.cfg.value];
-      this._drawWind(ctx, point, +obj[this.cfg.dir], null, level);
+    if(zoom < 2){
+      latOffset = 16;
+      lngOffset = 16;
+    }else if (zoom >= 2 && zoom < 3){
+      latOffset = 8;
+      lngOffset = 8;
+    } else if (zoom >= 3 && zoom < 5){
+      latOffset = 4;
+      lngOffset = 4;
+    } else {
+      latOffset = 1;
+      lngOffset = 1;
     }
+    var latPts , latlng, point, lpoint, rpoint, level, dir;
+   for (let i = 0, len = sortData.length; i < len; i+=latOffset) {
+     latPts = sortData[i];
+     for (let j = 0, lenj = latPts.length; j < lenj; j+=lngOffset){
+       latlng = L.latLng(latPts[j][this.cfg.lat], latPts[j][this.cfg.lng]);
+       point =  map.latLngToContainerPoint(latlng);
+       lpoint =  map.latLngToContainerPoint(latlng.getSubtract360LatLng());
+       rpoint =  map.latLngToContainerPoint(latlng.getAdd360LatLng());
+       level = latPts[j][this.cfg.value];
+       dir = latPts[j][this.cfg.dir];
+       this._drawWind(ctx, point, dir, null, level);
+       this._drawWind(ctx, lpoint, dir, null, level);
+       this._drawWind(ctx, rpoint, dir, null, level);
+     }
+   }
+
+
+    // for(let i = 0, len = data.length; i < len; i++) {
+    //   var obj = data[i];
+    //   var latlng = L.latLng(obj[this.cfg.lat], obj[this.cfg.lng]);
+    //   var point = map.latLngToContainerPoint(latlng);
+    //   var level = obj[this.cfg.value];
+    //   this._drawWind(ctx, point, +obj[this.cfg.dir], null, level);
+    // }
+  },
+
+  sortByLat: function (data) {
+    var newData = [];
+    var temp = [];
+    // 将数据按纬度划分
+    for (let i = 0, len = data.length; i < len; i++){
+      if (temp.length === 0){
+        temp.push(data[i]);
+      } else {
+        if (data[i][0] === temp[temp.length-1][0]){
+          temp.push(data[i]);
+        }else{
+          newData.push(temp);
+          temp = [];
+        }
+      }
+    }
+    return newData;
+  },
+
+  drawByLat: function (latdata) {
+
   },
 
   /**
