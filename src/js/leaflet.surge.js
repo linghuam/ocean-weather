@@ -7,7 +7,8 @@ export var SurgeLayer = CanvasLayer.extend({
     this.cfg = Object.assign({
       lat: '0',
       lng: '1',
-      dir: '2',
+      value: '2',
+      dir: '3',
       data: [],
       isDrawLeftRight: true
     }, config);
