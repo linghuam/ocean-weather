@@ -6,11 +6,13 @@ export var WindLayer = CanvasLayer.extend({
     CanvasLayer.prototype.initialize.call(this, options);
     this.cfg = config;
     this._data = config && config.data || [];
+    this._sortData = this.sortByLat(this._data);
   },
 
   setData: function (data) {
     // -- custom data set
     this._data = data;
+    this._sortData = this.sortByLat(this._data);
     this.needRedraw(); // -- call to drawLayer
   },
 
@@ -24,16 +26,15 @@ export var WindLayer = CanvasLayer.extend({
 
   onDrawLayer: function (info) {
     // -- custom  draw
+    var canvas = this._canvas = info.canvas;
     var ctx = this._ctx = info.canvas.getContext('2d');
     var map = this._map = info.layer._map;
     var zoom = map.getZoom();
-    var data = this._data;
-    var sortData = this.sortByLat(data);
+    var sortData = this._sortData;
     var latOffset = 1, lngOffset = 1;
-    if(!data.length) {
-      return;
-    }
-    ctx.clearRect(0, 0, info.canvas.width, info.canvas.height);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     if(zoom < 2){
       latOffset = 16;
       lngOffset = 16;
@@ -47,7 +48,8 @@ export var WindLayer = CanvasLayer.extend({
       latOffset = 1;
       lngOffset = 1;
     }
-    var latPts , latlng, point, lpoint, rpoint, level, dir;
+
+   var latPts , latlng, point, lpoint, rpoint, level, dir;
    for (let i = 0, len = sortData.length; i < len; i+=latOffset) {
      latPts = sortData[i];
      for (let j = 0, lenj = latPts.length; j < lenj; j+=lngOffset){
@@ -57,23 +59,15 @@ export var WindLayer = CanvasLayer.extend({
        rpoint =  map.latLngToContainerPoint(latlng.getAdd360LatLng());
        level = latPts[j][this.cfg.value];
        dir = latPts[j][this.cfg.dir];
-       this._drawWind(ctx, point, dir, null, level);
-       this._drawWind(ctx, lpoint, dir, null, level);
-       this._drawWind(ctx, rpoint, dir, null, level);
+       this._drawWind(ctx, point, dir, level);
+       this._drawWind(ctx, lpoint, dir, level);
+       this._drawWind(ctx, rpoint, dir, level);
      }
    }
-
-
-    // for(let i = 0, len = data.length; i < len; i++) {
-    //   var obj = data[i];
-    //   var latlng = L.latLng(obj[this.cfg.lat], obj[this.cfg.lng]);
-    //   var point = map.latLngToContainerPoint(latlng);
-    //   var level = obj[this.cfg.value];
-    //   this._drawWind(ctx, point, +obj[this.cfg.dir], null, level);
-    // }
   },
 
   sortByLat: function (data) {
+    console.time('按纬度分隔');
     var newData = [];
     var temp = [];
     // 将数据按纬度划分
@@ -89,11 +83,8 @@ export var WindLayer = CanvasLayer.extend({
         }
       }
     }
+    console.timeEnd('按纬度分隔');
     return newData;
-  },
-
-  drawByLat: function (latdata) {
-
   },
 
   /**
@@ -101,11 +92,11 @@ export var WindLayer = CanvasLayer.extend({
    * @param  {obj} ctx 绘制context对象
    * @param  {obj} startpoint 起始点
    * @param  {Number} dir        方向
-   * @param  {Number} r          线的长度 pixel
    * @param  {Number} level      风等级
+   * @param  {Number} r          线段的长度 pixel
    * @return {null}            null
    */
-  _drawWind: function (ctx, startpoint, dir, r, level) {
+  _drawWind: function (ctx, startpoint, dir, level, r) {
     r = r || 16;
     var arc = (Math.PI * dir) / 180;
     var a = startpoint.x,
