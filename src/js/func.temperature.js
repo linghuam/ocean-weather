@@ -24,7 +24,9 @@ export class FuncTemperature {
               temp.push(data[i]);
             }
         }
-        new TemperatureLayer({}, {
+        this._templayer = new TemperatureLayer({
+            isclip:true
+        }, {
           data:newData
         }).addTo(this._map);
 
@@ -62,6 +64,11 @@ export class FuncTemperature {
           this._map.removeLayer(this._tempratureLayer);
         }
         this._map.addLayer(heatmapLayer);
+
+        this._templayer._clip(heatmapLayer._heatmap._renderer.canvas, heatmapLayer._heatmap._renderer.ctx, this._map);
+        this._map.on('moveend', function () {
+          this._templayer._clip(heatmapLayer._heatmap._renderer.canvas, heatmapLayer._heatmap._renderer.ctx, this._map);
+        }, this);
       }.bind(this),
     });
   }

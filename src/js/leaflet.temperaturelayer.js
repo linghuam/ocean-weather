@@ -57,7 +57,6 @@ export var TemperatureLayer = CanvasLayer.extend({
   },
 
   getPoints (map, data) {
-    // 待处理问题..... 跨180度
     var pts = [];
     var latlngs = [], latlng;
     for (let i = 0, len = data.length; i < len; i++){
@@ -73,7 +72,6 @@ export var TemperatureLayer = CanvasLayer.extend({
   },
 
   getLeft360Points (map, data) {
-    // 待处理问题..... 跨180度
     var pts = [];
     var latlngs = [], latlng;
     for (let i = 0, len = data.length; i < len; i++){
@@ -89,7 +87,6 @@ export var TemperatureLayer = CanvasLayer.extend({
   },
 
   getRight360Points (map, data) {
-    // 待处理问题..... 跨180度
     var pts = [];
     var latlngs = [], latlng;
     for (let i = 0, len = data.length; i < len; i++){
