@@ -12,7 +12,13 @@ export var PressureLayer = CanvasLayer.extend({
     opacity: 0.85,
     lineCap: 'round',
     lineJoin: 'round',
-    fill: false
+    fill: false,
+    fontSize: '12px',
+    fontWeight: 600,
+    fontFamily: 'Microsoft YaHei',
+    fontColor: '#61A5E8',
+    fontStrokeSize: 3,
+    fontStrokeColor: '#fff'
   },
 
   initialize: function (options, config) {
@@ -137,10 +143,10 @@ export var PressureLayer = CanvasLayer.extend({
     ctx.save();
     ctx.textAlign = 'start';
     ctx.textBaseline = 'middle';
-    ctx.font = 'normal normal 600 12px normal Microsoft YaHei';
-    ctx.fillStyle = "#000";
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 3;
+    ctx.font = 'normal ' + this.options.fontWeight + ' ' + this.options.fontSize + ' ' + this.options.fontFamily;
+    ctx.fillStyle = this.options.fontColor;
+    ctx.strokeStyle = this.options.fontStrokeColor;
+    ctx.lineWidth = this.options.fontStrokeSize;
     ctx.strokeText(text, pt.x, pt.y);
     ctx.fillText(text, pt.x, pt.y);
     ctx.restore();
