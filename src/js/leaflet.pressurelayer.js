@@ -5,7 +5,14 @@ export var PressureLayer = CanvasLayer.extend({
 
   options:{
     isclip: false,
-    isDrawLeftRight: true
+    isDrawLeftRight: true,
+    stroke: true,
+    color:  '#605FF0', //'#61A5E8',
+    weight: 0.8,
+    opacity: 0.85,
+    lineCap: 'round',
+    lineJoin: 'round',
+    fill: false
   },
 
   initialize: function (options, config) {
@@ -122,7 +129,7 @@ export var PressureLayer = CanvasLayer.extend({
       p = points[i];
       i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y);
     }
-    ctx.stroke();
+    this._fillStroke(ctx);
     ctx.restore();
   },
 
@@ -138,6 +145,28 @@ export var PressureLayer = CanvasLayer.extend({
     ctx.fillText(text, pt.x, pt.y);
     ctx.restore();
   },
+
+  _fillStroke: function (ctx) {
+		var options = this.options;
+
+		if (options.fill) {
+			ctx.globalAlpha = options.fillOpacity;
+			ctx.fillStyle = options.fillColor || options.color;
+			ctx.fill(options.fillRule || 'evenodd');
+		}
+
+		if (options.stroke && options.weight !== 0) {
+			if (ctx.setLineDash) {
+				ctx.setLineDash(this.options && this.options._dashArray || []);
+			}
+			ctx.globalAlpha = options.opacity;
+			ctx.lineWidth = options.weight;
+			ctx.strokeStyle = options.color;
+			ctx.lineCap = options.lineCap;
+			ctx.lineJoin = options.lineJoin;
+			ctx.stroke();
+		}
+	},
 
  // 剪掉陆地部分
   _clip: function (canvas, ctx, map){
