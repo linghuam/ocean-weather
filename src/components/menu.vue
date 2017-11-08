@@ -13,7 +13,7 @@ import { FuncFlow } from '../js/func.flow'
 import { FuncFlow2 } from '../js/func.flow2'
 import { FuncPressure } from '../js/func.pressure'
 import { FuncVisibility } from '../js/func.visibility'
-import { FuncSurge2 } from '../js/func.surge2'
+import { FuncSurge } from '../js/func.surge'
 import { Func500mb } from '../js/func.500mb'
 import { FuncTemperature } from '../js/func.temperature'
 import { FuncWave } from '../js/func.wave'
@@ -21,8 +21,8 @@ import { FuncWave } from '../js/func.wave'
 export default {
   data() {
     return {
-      items: ['风', '风2', '洋流', '洋流2', '涌', '涌2', '气压', '500mb', '海温', '能见度', '浪高']
-      // items: ['风', '风2', '洋流2', '涌2', '气压', '500mb', '海温', '能见度', '浪高']
+      items: ['风', '风2', '洋流', '洋流2', '涌', '气压', '500mb', '海温', '能见度', '浪高']
+      // items: ['风', '风2', '洋流2', '气压', '500mb', '海温', '能见度', '浪高']
     };
   },
 
@@ -35,7 +35,7 @@ export default {
       this._funcFlow2 && this._funcFlow2.stop();
       this._funcPressure && this._funcPressure.stop();
       this._funcVisibility && this._funcVisibility.stop();
-      this._funcSurge2 && this._funcSurge2.stop();
+      this._funcSurge && this._funcSurge.stop();
       this._func500mb && 　this._func500mb.stop();
       this._funcTemperature && this._funcTemperature.stop();
       this._funcWave && this._funcWave.stop();
@@ -63,12 +63,10 @@ export default {
         }
         this._funcFlow2.start();
       } else if(type === '涌') {
-
-      } else if(type === '涌2') {
-        if(!this._funcSurge2) {
-          this._funcSurge2 = new FuncSurge2(map);
+        if(!this._funcSurge) {
+          this._funcSurge = new FuncSurge(map);
         }
-        this._funcSurge2.start();
+        this._funcSurge.start();
       } else if(type === '气压') {
         if(!this._funcPressure) {
           this._funcPressure = new FuncPressure(map);
