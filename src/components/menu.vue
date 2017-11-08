@@ -1,7 +1,7 @@
 <template>
   <div id="menu">
     <el-button-group>
-      <el-button type="primary" v-for="item in items" @click="btnClickEvt(item)">{{item}}</el-button>
+      <el-button type="primary" v-for="item in items" :key="item" @click="btnClickEvt(item)">{{item}}</el-button>
     </el-button-group>
   </div>
 </template>
@@ -21,28 +21,26 @@ import { FuncWave } from '../js/func.wave'
 export default {
   data() {
     return {
-      items: ['风', '风2', '洋流', '洋流2', '涌', '气压', '500mb', '海温', '能见度', '浪高']
+      items: ['清空所有图层', '风', '风2', '洋流', '洋流2', '涌', '气压', '500mb', '海温', '能见度', '浪高']
       // items: ['风', '风2', '洋流2', '气压', '500mb', '海温', '能见度', '浪高']
     };
   },
 
   methods: {
     btnClickEvt(type) {
-
-      this._funcWind && this._funcWind.stop();
-      this._funcWind2 && this._funcWind2.stop();
-      this._funcFlow && this._funcFlow.stop();
-      this._funcFlow2 && this._funcFlow2.stop();
-      this._funcPressure && this._funcPressure.stop();
-      this._funcVisibility && this._funcVisibility.stop();
-      this._funcSurge && this._funcSurge.stop();
-      this._func500mb && 　this._func500mb.stop();
-      this._funcTemperature && this._funcTemperature.stop();
-      this._funcWave && this._funcWave.stop();
-
       var map = this.$parent.$data.map;
-
-      if(type === '风') {
+      if(type === '清空所有图层'){
+        this._funcWind && this._funcWind.stop();
+        this._funcWind2 && this._funcWind2.stop();
+        this._funcFlow && this._funcFlow.stop();
+        this._funcFlow2 && this._funcFlow2.stop();
+        this._funcPressure && this._funcPressure.stop();
+        this._funcVisibility && this._funcVisibility.stop();
+        this._funcSurge && this._funcSurge.stop();
+        this._func500mb && 　this._func500mb.stop();
+        this._funcTemperature && this._funcTemperature.stop();
+        this._funcWave && this._funcWave.stop();
+      } else if(type === '风') {
         if(!this._funcWind) {
           this._funcWind = new FuncWind(map);
         }
