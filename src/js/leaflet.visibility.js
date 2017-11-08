@@ -12,7 +12,10 @@ export var VisibilityLayer = CanvasLayer.extend({
     opacity: 0.85,
     lineCap: 'round',
     lineJoin: 'round',
-    fill: false,
+    // fill: true,
+    fillOpacity: 0.3,
+    fillColor: '#E16757',
+    fillRule: 'evenodd',
     fontSize: '12px',
     fontWeight: 600,
     fontFamily: 'Microsoft YaHei',
@@ -55,26 +58,60 @@ export var VisibilityLayer = CanvasLayer.extend({
     var data = this._data;
     var points , lpoints, rpoints, text;
 
+    // 创建离屏canvas
+    var offScreenCanvas = document.createElement('canvas');
+    var offScreenContext = offScreenCanvas.getContext('2d');
+    offScreenCanvas.width = canvas.width;
+    offScreenCanvas.height = canvas.height;
+
+    offScreenContext.clearRect(0, 0, offScreenCanvas.width, offScreenCanvas.height);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    console.time('visibility:render');
     for(let i = 0, len = data.length; i < len; i++) {
       points = this.getPoints(map, data[i]);
       text = data[i][0][this.cfg.value];
-      this._drawLine(ctx, points);
+      this._drawArea(ctx, points);
+      this._drawLine(offScreenContext, points);
       if (this.options.isDrawLeftRight){
         lpoints = this.getLeft360Points(map, data[i]);
         rpoints = this.getRight360Points(map, data[i]);
-        this._drawLine(ctx, lpoints);
-        this._drawLine(ctx, rpoints);
+        this._drawArea(ctx, lpoints);
+        this._drawArea(ctx, rpoints);
+        this._drawLine(offScreenContext, lpoints);
+        this._drawLine(offScreenContext, rpoints);
       }
       if (zoom >= 3 && zoom < 5 && text >=1000 || zoom >= 5) {
-        this._drawText(ctx, points[Math.floor(points.length / 2)] ,text);
+        this._drawText(offScreenContext, points[Math.floor(points.length / 2)] ,text);
         if (this.options.isDrawLeftRight){
-          this._drawText(ctx, lpoints[Math.floor(points.length / 2)] ,text);
-          this._drawText(ctx, rpoints[Math.floor(points.length / 2)] ,text);
+          this._drawText(offScreenContext, lpoints[Math.floor(points.length / 2)] ,text);
+          this._drawText(offScreenContext, rpoints[Math.floor(points.length / 2)] ,text);
         }
       }
     }
+    ctx.drawImage(offScreenCanvas, 0, 0, offScreenCanvas.width, offScreenCanvas.height);
+    console.timeEnd('visibility:render');
+
+    // console.time('visibility:render');
+    // for(let i = 0, len = data.length; i < len; i++) {
+    //   points = this.getPoints(map, data[i]);
+    //   text = data[i][0][this.cfg.value];
+    //   this._drawLine(ctx, points);
+    //   if (this.options.isDrawLeftRight){
+    //     lpoints = this.getLeft360Points(map, data[i]);
+    //     rpoints = this.getRight360Points(map, data[i]);
+    //     this._drawLine(ctx, lpoints);
+    //     this._drawLine(ctx, rpoints);
+    //   }
+    //   if (zoom >= 3 && zoom < 5 && text >=1000 || zoom >= 5) {
+    //     this._drawText(ctx, points[Math.floor(points.length / 2)] ,text);
+    //     if (this.options.isDrawLeftRight){
+    //       this._drawText(ctx, lpoints[Math.floor(points.length / 2)] ,text);
+    //       this._drawText(ctx, rpoints[Math.floor(points.length / 2)] ,text);
+    //     }
+    //   }
+    // }
+    // console.timeEnd('visibility:render');
 
     // clip
     if (this.options.isclip){
@@ -136,6 +173,22 @@ export var VisibilityLayer = CanvasLayer.extend({
       i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y);
     }
     this._fillStroke(ctx);
+    ctx.restore();
+  },
+
+  _drawArea: function (ctx, points) {
+    var p ;
+    ctx.save();
+    ctx.beginPath();
+    for (let i = 0, len = points.length; i < len; i++){
+      p = points[i];
+      i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y);
+    }
+    ctx.closePath();
+    ctx.globalAlpha = this.options.fillOpacity;
+    ctx.fillStyle = this.options.fillColor || this.options.color;
+    ctx.fill(this.options.fillRule || 'evenodd');
+    // this._fillStroke(ctx);
     ctx.restore();
   },
 
