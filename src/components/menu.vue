@@ -1,7 +1,7 @@
 <template>
   <div id="menu">
     <el-button-group>
-      <el-button type="primary" v-for="item in items" :key="item" @click="btnClickEvt(item)">{{item}}</el-button>
+      <el-button type="primary" v-for="item in items" :key="item" @click="btnClickEvt(item, $event)">{{item}}</el-button>
     </el-button-group>
   </div>
 </template>
@@ -27,7 +27,7 @@ export default {
   },
 
   methods: {
-    btnClickEvt(type) {
+    btnClickEvt(type, event) {
       var map = this.$parent.$data.map;
       if(type === '清空所有图层'){
         this._funcWind && this._funcWind.stop();
