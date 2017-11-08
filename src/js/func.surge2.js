@@ -1,6 +1,6 @@
 import Papa from 'papaparse'
 import { SurgeLayer } from './leaflet.surge'
-import { SurgeISOBands } from './leaflet.surge.isobands'
+// import { SurgeISOBands } from './leaflet.surge.isobands'
 
 export class FuncSurge2 {
 
@@ -24,9 +24,9 @@ export class FuncSurge2 {
           this._map.removeLayer(this._surgeLayer);
         }
         this._surgeLayer = new SurgeLayer(null, config);
-        var surgeIsobands = new SurgeISOBands(null, config);
+        // var surgeIsobands = new SurgeISOBands(null, config);
         this._map.addLayer(this._surgeLayer);
-        this._map.addLayer(surgeIsobands);
+        // this._map.addLayer(surgeIsobands);
       }.bind(this)
     });
   }
