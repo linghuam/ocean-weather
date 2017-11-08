@@ -4,13 +4,32 @@ import geoJson from '../assets/outline.json'
 export var TemperatureLayer = CanvasLayer.extend({
 
   options:{
-    isclip:false
+    isclip: true,
+    isDrawLeftRight: false,
+    stroke: true,
+    color:  '#605FF0', //'#61A5E8',
+    weight: 0.8,
+    opacity: 0.85,
+    lineCap: 'round',
+    lineJoin: 'round',
+    fill: false,
+    fontSize: '12px',
+    fontWeight: 600,
+    fontFamily: 'Microsoft YaHei',
+    fontColor: '#61A5E8',
+    fontStrokeSize: 3,
+    fontStrokeColor: '#fff'
   },
 
   initialize: function (options, config) {
     CanvasLayer.prototype.initialize.call(this, options);
-    this.cfg = config;
-    this._data = config && config.data || [];
+    this.cfg = Object.assign({
+      lat: '0',
+      lng: '1',
+      value: '2',
+      data: []
+    }, config);
+    this._data = this.cfg.data;
   },
 
   setData: function (data) {
@@ -29,37 +48,37 @@ export var TemperatureLayer = CanvasLayer.extend({
 
   onDrawLayer: function (info) {
     // -- custom  draw
+    var canvas = this._canvas = info.canvas;
     var ctx = this._ctx = info.canvas.getContext('2d');
     var map = this._map = info.layer._map;
     var zoom = map.getZoom();
     var data = this._data;
     var points , lpoints, rpoints, text;
-    if(!data.length) {
-      return;
-    }
-    ctx.clearRect(0, 0, info.canvas.width, info.canvas.height);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     for(let i = 0, len = data.length; i < len; i++) {
       points = this.getPoints(map, data[i]);
-      lpoints = this.getLeft360Points(map, data[i]);
-      rpoints = this.getRight360Points(map, data[i]);
-      text = data[i][0][2];
+      text = data[i][0][this.cfg.value];
       this._drawLine(ctx, points);
-      this._drawLine(ctx, lpoints);
-      this._drawLine(ctx, rpoints);
-      if (zoom < 3 && text > 30) {
-        // this._drawText(ctx, points[Math.floor(points.length / 2)] ,text);
-        // this._drawText(ctx, lpoints[Math.floor(points.length / 2)] ,text);
-        // this._drawText(ctx, rpoints[Math.floor(points.length / 2)] ,text);
-      } else if (zoom >= 3){
+      if (this.options.isDrawLeftRight){
+        lpoints = this.getLeft360Points(map, data[i]);
+        rpoints = this.getRight360Points(map, data[i]);
+        this._drawLine(ctx, lpoints);
+        this._drawLine(ctx, rpoints);
+      }
+      if (zoom >= 3 && zoom < 5 && text >= 20 || zoom >= 5) {
         this._drawText(ctx, points[Math.floor(points.length / 2)] ,text);
-        this._drawText(ctx, lpoints[Math.floor(points.length / 2)] ,text);
-        this._drawText(ctx, rpoints[Math.floor(points.length / 2)] ,text);
+        if (this.options.isDrawLeftRight){
+          this._drawText(ctx, lpoints[Math.floor(points.length / 2)] ,text);
+          this._drawText(ctx, rpoints[Math.floor(points.length / 2)] ,text);
+        }
       }
     }
 
     // clip
     if (this.options.isclip){
-      this._clip(info.canvas, ctx, map);
+      this._clip(canvas, ctx, map);
     }
   },
 
@@ -67,10 +86,10 @@ export var TemperatureLayer = CanvasLayer.extend({
     var pts = [];
     var latlngs = [], latlng;
     for (let i = 0, len = data.length; i < len; i++){
-      latlng = L.latLng(data[i][0], data[i][1]);
+      latlng = L.latLng(data[i][this.cfg.lat], data[i][this.cfg.lng]);
       latlngs.push(latlng);
     }
-    // 转化
+    // 跨180度合理化
     latlngs = this._legelLatLngs(latlngs);
     for (let i = 0, len = latlngs.length; i < len; i++){
       pts.push( map.latLngToContainerPoint(latlngs[i]));
@@ -82,10 +101,10 @@ export var TemperatureLayer = CanvasLayer.extend({
     var pts = [];
     var latlngs = [], latlng;
     for (let i = 0, len = data.length; i < len; i++){
-      latlng = L.latLng(data[i][0], Number(data[i][1]) - 360);
+      latlng = L.latLng(data[i][this.cfg.lat], Number(data[i][this.cfg.lng]) - 360);
       latlngs.push(latlng);
     }
-    // 转化
+    // 跨180度合理化
     latlngs = this._legelLatLngs(latlngs);
     for (let i = 0, len = latlngs.length; i < len; i++){
       pts.push( map.latLngToContainerPoint(latlngs[i]));
@@ -97,10 +116,10 @@ export var TemperatureLayer = CanvasLayer.extend({
     var pts = [];
     var latlngs = [], latlng;
     for (let i = 0, len = data.length; i < len; i++){
-      latlng = L.latLng(data[i][0], Number(data[i][1]) + 360);
+      latlng = L.latLng(data[i][this.cfg.lat], Number(data[i][this.cfg.lng]) + 360);
       latlngs.push(latlng);
     }
-    // 转化
+    // 跨180度合理化
     latlngs = this._legelLatLngs(latlngs);
     for (let i = 0, len = latlngs.length; i < len; i++){
       pts.push( map.latLngToContainerPoint(latlngs[i]));
@@ -116,7 +135,7 @@ export var TemperatureLayer = CanvasLayer.extend({
       p = points[i];
       i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y);
     }
-    ctx.stroke();
+    this._fillStroke(ctx);
     ctx.restore();
   },
 
@@ -124,14 +143,36 @@ export var TemperatureLayer = CanvasLayer.extend({
     ctx.save();
     ctx.textAlign = 'start';
     ctx.textBaseline = 'middle';
-    ctx.font = 'normal normal 600 12px normal Microsoft YaHei';
-    ctx.fillStyle = "#000";
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 3;
+    ctx.font = 'normal ' + this.options.fontWeight + ' ' + this.options.fontSize + ' ' + this.options.fontFamily;
+    ctx.fillStyle = this.options.fontColor;
+    ctx.strokeStyle = this.options.fontStrokeColor;
+    ctx.lineWidth = this.options.fontStrokeSize;
     ctx.strokeText(text, pt.x, pt.y);
     ctx.fillText(text, pt.x, pt.y);
     ctx.restore();
   },
+
+  _fillStroke: function (ctx) {
+		var options = this.options;
+
+		if (options.fill) {
+			ctx.globalAlpha = options.fillOpacity;
+			ctx.fillStyle = options.fillColor || options.color;
+			ctx.fill(options.fillRule || 'evenodd');
+		}
+
+		if (options.stroke && options.weight !== 0) {
+			if (ctx.setLineDash) {
+				ctx.setLineDash(this.options && this.options._dashArray || []);
+			}
+			ctx.globalAlpha = options.opacity;
+			ctx.lineWidth = options.weight;
+			ctx.strokeStyle = options.color;
+			ctx.lineCap = options.lineCap;
+			ctx.lineJoin = options.lineJoin;
+			ctx.stroke();
+		}
+	},
 
  // 剪掉陆地部分
   _clip: function (canvas, ctx, map){

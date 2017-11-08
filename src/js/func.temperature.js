@@ -11,93 +11,79 @@ export class FuncTemperature {
   start() {
     Papa.parse('./static/data/temperature.csv', {
       download: true,
+      header: false,
       complete: function (results) {
-        var data = results.data || [];
-        var newData = [];
-        var temp = [];
-        var i, len;
-        for (i = 0, len = data.length; i < len; i++){
-            if (data[i].length === 1 || i === len-1) {
-              if (temp.length >= 2) newData.push(temp);
-              temp = [];
-            } else {
-              temp.push(data[i]);
-            }
-        }
-        this._templayer = new TemperatureLayer({
-            isclip:true
-        }, {
-          data:newData
-        }).addTo(this._map);
-
-        // heatmap
-        // var data = results.data || [];
-        data = data.filter(function (value) {
-          return value !== '' && value.length > 1;
-        });
-        var ldata = [], rdata = [];
-        for (let i = 0, len = data.length; i < len; i++){
-          ldata.push([data[i][0], data[i][1] - 360, data[i][2]]);
-          rdata.push([data[i][0], data[i][1] + 360, data[i][2]]);
-        }
-        var datacfg = {
-          max: 39,
-          data: data
-        };
-        var ldatacfg = {
-          max: 39,
-          data: ldata
-        };
-        var rdatacfg = {
-          max: 39,
-          data: rdata
-        };
-        var cfg = {
-          // radius should be small ONLY if scaleRadius is true (or small radius is intended)
-          // if scaleRadius is false it will be the constant radius used in pixels
-          "radius": 2,
-          "maxOpacity": .8,
-          // scales the radius based on map zoom
-          "scaleRadius": true,
-          // if set to false the heatmap uses the global maximum for colorization
-          // if activated: uses the data maximum within the current map boundaries
-          //   (there will always be a red spot with useLocalExtremas true)
-          "useLocalExtrema": false,
-          // which field name in your data represents the latitude - default "lat"
-          latField: '0',
-          // which field name in your data represents the longitude - default "lng"
-          lngField: '1',
-          // which field name in your data represents the data value - default "value"
-          valueField: '2'
-        };
-        // var heatmapLayer = this._tempratureLayer = new HeatmapOverlay(cfg);
-        // heatmapLayer.setData(datacfg);
-        // var lheatmapLayer = this._tempratureLayer = new HeatmapOverlay(cfg);
-        // lheatmapLayer.setData(ldatacfg);
-        var rheatmapLayer = this._tempratureLayer = new HeatmapOverlay(cfg);
-        rheatmapLayer.setData(rdatacfg);
-        // if(this._map.hasLayer(this._tempratureLayer)) {
-        //   this._map.removeLayer(this._tempratureLayer);
-        // }
-        // this._map.addLayer(heatmapLayer);
-        // this._map.addLayer(lheatmapLayer);
-        this._map.addLayer(rheatmapLayer);
-
-        // this._templayer._clip(heatmapLayer._heatmap._renderer.canvas, heatmapLayer._heatmap._renderer.ctx, this._map);
-        // this._templayer._clip(lheatmapLayer._heatmap._renderer.canvas, lheatmapLayer._heatmap._renderer.ctx, this._map);
-        this._templayer._clip(rheatmapLayer._heatmap._renderer.canvas, rheatmapLayer._heatmap._renderer.ctx, this._map);
-        this._map.on('moveend', function () {
-          // this._templayer._clip(heatmapLayer._heatmap._renderer.canvas, heatmapLayer._heatmap._renderer.ctx, this._map);
-          // this._templayer._clip(lheatmapLayer._heatmap._renderer.canvas, lheatmapLayer._heatmap._renderer.ctx, this._map);
-          this._templayer._clip(rheatmapLayer._heatmap._renderer.canvas, rheatmapLayer._heatmap._renderer.ctx, this._map);
-        }, this);
-      }.bind(this),
+        this.getDataCallback.call(this, results);
+      }.bind(this)
     });
   }
 
   stop　() {
-    // if(this._map.hasLayer(this._tempratureLayer)) {
-    //   this._map.removeLayer(this._tempratureLayer);
+    if(this._map.hasLayer(this._layer)) {
+      this._map.removeLayer(this._layer);
+    }
+    if(this._map.hasLayer(this._heatLayer)) {
+      this._map.removeLayer(this._heatLayer);
+    }
+  }
+
+  getDataCallback (results) {
+    var data = results.data || [];
+    var newData = [];
+    var temp = [];
+    var i, len;
+    for (i = 0, len = data.length; i < len; i++){
+        if (data[i].length === 1 || i === len - 1) {
+          if (temp.length >= 2) newData.push(temp);
+          temp = [];
+        } else {
+          temp.push(data[i]);
+        }
+    }
+    this._layer = new TemperatureLayer({
+        isclip:true
+    }, {
+      data:newData
+    }).addTo(this._map);
+
+    // heatmap
+    data = data.filter(function (value) {
+      return value !== '' && value.length > 1;
+    });
+    // var ldata = [], rdata = [];
+    // for (let i = 0, len = data.length; i < len; i++){
+    //   ldata.push([data[i][0], data[i][1] - 360, data[i][2]]);
+    //   rdata.push([data[i][0], data[i][1] + 360, data[i][2]]);
     // }
+    var datacfg = {
+      max: 39,
+      data: data
+    };
+    var cfg = {
+      // radius should be small ONLY if scaleRadius is true (or small radius is intended)
+      // if scaleRadius is false it will be the constant radius used in pixels
+      "radius": 2,
+      "maxOpacity": .8,
+      // scales the radius based on map zoom
+      "scaleRadius": true,
+      // if set to false the heatmap uses the global maximum for colorization
+      // if activated: uses the data maximum within the current map boundaries
+      //   (there will always be a red spot with useLocalExtremas true)
+      "useLocalExtrema": false,
+      // which field name in your data represents the latitude - default "lat"
+      latField: '0',
+      // which field name in your data represents the longitude - default "lng"
+      lngField: '1',
+      // which field name in your data represents the data value - default "value"
+      valueField: '2'
+    };
+    var rheatmapLayer = this._heatLayer = new HeatmapOverlay(cfg);
+    rheatmapLayer.setData(datacfg);
+    this._map.addLayer(rheatmapLayer);
+
+    this._layer && this._layer._clip(rheatmapLayer._heatmap._renderer.canvas, rheatmapLayer._heatmap._renderer.ctx, this._map);
+    this._map.on('moveend', function () {
+      this._layer._clip(rheatmapLayer._heatmap._renderer.canvas, rheatmapLayer._heatmap._renderer.ctx, this._map);
+    }, this);
   }
 }
