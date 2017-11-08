@@ -1,6 +1,6 @@
 import Papa from 'papaparse'
 import { HeatmapOverlay } from './leafletHeatmap/leaflet-heatmap'
-import { WaveLayer } from './leaflet.wave'
+import { WaveLayer } from './ocean.weather.wave'
 import  ClipLand  from './tool.clipLand'
 
 export class FuncWave {

@@ -1,6 +1,9 @@
 import { CanvasLayer } from './leaflet.canvasLayer'
 import  ClipLand  from './tool.clipLand'
 
+/**
+ * 气象图层 - 能见度
+ */
 export var VisibilityLayer = CanvasLayer.extend({
 
   options:{

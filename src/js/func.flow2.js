@@ -1,5 +1,5 @@
 import Papa from 'papaparse'
-import { FlowLayer } from './leaflet.flow'
+import { FlowLayer } from './ocean.weather.flow'
 
 export class FuncFlow2 {
 

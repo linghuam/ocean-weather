@@ -1,5 +1,8 @@
 import { CanvasLayer } from './leaflet.canvasLayer'
 
+/**
+ * 气象图层 - 风
+ */
 class Wind {
   /**
    * 构造函数

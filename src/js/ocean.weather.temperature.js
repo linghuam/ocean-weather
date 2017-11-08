@@ -1,11 +1,14 @@
 import { CanvasLayer } from './leaflet.canvasLayer'
 import  ClipLand  from './tool.clipLand'
 
-export var PressureLayer = CanvasLayer.extend({
+/**
+ * 气象图层 - 温度
+ */
+export var TemperatureLayer = CanvasLayer.extend({
 
   options:{
-    isclip: false,
-    isDrawLeftRight: true,
+    isclip: true,
+    isDrawLeftRight: false,
     stroke: true,
     color:  '#605FF0', //'#61A5E8',
     weight: 0.8,
@@ -67,7 +70,7 @@ export var PressureLayer = CanvasLayer.extend({
         this._drawLine(ctx, lpoints);
         this._drawLine(ctx, rpoints);
       }
-      if (zoom >= 3 && zoom < 5 && text >=1000 || zoom >= 5) {
+      if (zoom >= 3 && zoom < 5 && text >= 20 || zoom >= 5) {
         this._drawText(ctx, points[Math.floor(points.length / 2)] ,text);
         if (this.options.isDrawLeftRight){
           this._drawText(ctx, lpoints[Math.floor(points.length / 2)] ,text);
@@ -80,6 +83,8 @@ export var PressureLayer = CanvasLayer.extend({
     if (this.options.isclip){
       ClipLand.clip(canvas, map);
     }
+
+    this.fire('drawEnd');
   },
 
   getPoints (map, data) {

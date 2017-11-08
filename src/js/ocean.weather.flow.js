@@ -1,5 +1,7 @@
 import { CanvasLayer } from './leaflet.canvasLayer'
-
+/**
+ * 气象图层 - 洋流
+ */
 export var FlowLayer = CanvasLayer.extend({
 
   initialize: function (options, config) {

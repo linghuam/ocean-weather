@@ -1,6 +1,5 @@
 import Papa from 'papaparse'
-// import { LineTextCanvas } from './leaflet.textCanvas'
-import { VisibilityLayer } from './leaflet.visibility'
+import { VisibilityLayer } from './ocean.weather.visibility'
 
 export class FuncVisibility {
 

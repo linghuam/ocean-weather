@@ -1,5 +1,8 @@
 import geoJson from '../assets/outline.json'
 
+/**
+ * 陆地裁剪工具
+ */
 export default {
 
   clip (canvas, map, options) {

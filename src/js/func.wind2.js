@@ -1,5 +1,5 @@
 import Papa from 'papaparse'
-import { WindLayer } from './leaflet.wind'
+import { WindLayer } from './ocean.weather.wind'
 
 export class FuncWind2 {
 

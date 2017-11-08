@@ -1,7 +1,5 @@
 import Papa from 'papaparse'
-import { LineTextCanvas } from './leaflet.textCanvas'
-// import turf from 'turf'
-import { PressureLayer } from './leaflet.pressurelayer'
+import { PressureLayer } from './ocean.weather.pressure'
 
 export class FuncPressure {
 

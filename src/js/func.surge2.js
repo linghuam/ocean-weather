@@ -1,5 +1,5 @@
 import Papa from 'papaparse'
-import { SurgeLayer } from './leaflet.surge'
+import { SurgeLayer } from './ocean.weather.surge'
 // import { SurgeISOBands } from './leaflet.surge.isobands'
 
 export class FuncSurge2 {

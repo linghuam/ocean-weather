@@ -1,7 +1,10 @@
 import { CanvasLayer } from './leaflet.canvasLayer'
 import  ClipLand  from './tool.clipLand'
 
-export var MB500Layer = CanvasLayer.extend({
+/**
+ * 气象图层 - 气压
+ */
+export var PressureLayer = CanvasLayer.extend({
 
   options:{
     isclip: false,
@@ -67,7 +70,7 @@ export var MB500Layer = CanvasLayer.extend({
         this._drawLine(ctx, lpoints);
         this._drawLine(ctx, rpoints);
       }
-      if (zoom >= 3 && zoom < 5 && text >= 400 || zoom >= 5) {
+      if (zoom >= 3 && zoom < 5 && text >=1000 || zoom >= 5) {
         this._drawText(ctx, points[Math.floor(points.length / 2)] ,text);
         if (this.options.isDrawLeftRight){
           this._drawText(ctx, lpoints[Math.floor(points.length / 2)] ,text);

@@ -1,6 +1,6 @@
 import Papa from 'papaparse'
 import { HeatmapOverlay } from './leafletHeatmap/leaflet-heatmap'
-import { TemperatureLayer } from './leaflet.temperaturelayer'
+import { TemperatureLayer } from './ocean.weather.temperature'
 import  ClipLand  from './tool.clipLand'
 
 export class FuncTemperature {

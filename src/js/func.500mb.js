@@ -1,7 +1,5 @@
 import Papa from 'papaparse'
-import { LineTextCanvas } from './leaflet.textCanvas'
-// import turf from 'turf'
-import { MB500Layer } from './leaflet.mb500'
+import { MB500Layer } from './ocean.weather.mb500'
 
 export class Func500mb {
 

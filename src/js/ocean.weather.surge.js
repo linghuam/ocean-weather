@@ -1,5 +1,8 @@
 import { CanvasLayer } from './leaflet.canvasLayer'
 
+/**
+ * 气象图层 - 涌
+ */
 export var SurgeLayer = CanvasLayer.extend({
 
   initialize: function (options, config) {
