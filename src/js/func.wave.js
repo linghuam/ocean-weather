@@ -1,6 +1,7 @@
 import Papa from 'papaparse'
 import { HeatmapOverlay } from './leafletHeatmap/leaflet-heatmap'
 import { WaveLayer } from './leaflet.wave'
+import  ClipLand  from './tool.clipLand'
 
 export class FuncWave {
 
@@ -80,10 +81,11 @@ export class FuncWave {
     var rheatmapLayer = this._heatLayer = new HeatmapOverlay(cfg);
     rheatmapLayer.setData(datacfg);
     this._map.addLayer(rheatmapLayer);
-
-    this._layer && this._layer._clip(rheatmapLayer._heatmap._renderer.canvas, rheatmapLayer._heatmap._renderer.ctx, this._map);
-    this._map.on('moveend', function () {
-      this._layer._clip(rheatmapLayer._heatmap._renderer.canvas, rheatmapLayer._heatmap._renderer.ctx, this._map);
+    this._layer.on('drawEnd', function () {
+        ClipLand.clip(rheatmapLayer._heatmap._renderer.canvas, this._map);
+    }, this);
+    this._map.on('moveend zoomend', function () {
+       ClipLand.clip(rheatmapLayer._heatmap._renderer.canvas, this._map);
     }, this);
   }
 }

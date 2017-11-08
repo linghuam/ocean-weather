@@ -1,5 +1,5 @@
 import { CanvasLayer } from './leaflet.canvasLayer'
-import geoJson from '../assets/outline.json'
+import  ClipLand  from './tool.clipLand'
 
 export var WaveLayer = CanvasLayer.extend({
 
@@ -78,8 +78,10 @@ export var WaveLayer = CanvasLayer.extend({
 
     // clip
     if (this.options.isclip){
-      this._clip(canvas, ctx, map);
+      ClipLand.clip(canvas, map);
     }
+
+    this.fire('drawEnd');
   },
 
   getPoints (map, data) {
@@ -173,56 +175,6 @@ export var WaveLayer = CanvasLayer.extend({
 			ctx.stroke();
 		}
 	},
-
- // 剪掉陆地部分
-  _clip: function (canvas, ctx, map){
-    console.time('clip');
-    var features = geoJson.features;
-    var feature;
-    for (let i = 0, len = features.length; i < len; i++){
-      feature =  features[i];
-      this._clipLand(canvas, ctx, map, feature);
-    }
-    console.timeEnd('clip');
-  },
-
-  _clipLand:function (canvas, ctx, map, feature){
-    var coords = [];
-    if (feature.geometry.type === 'Polygon'){
-      coords = feature.geometry.coordinates[0];
-      this._drawClip(canvas, ctx, map, coords);
-    } else if (feature.geometry.type === 'MultiPolygon'){
-      var lines = feature.geometry.coordinates;
-      for (let i = 0, len = lines.length; i < len; i++){
-        coords = lines[i][0];
-        this._drawClip(canvas, ctx, map, coords);
-      }
-    }
-  },
-
-  _drawClip: function (canvas, ctx, map, coords) {
-    var pt , lpt, rpt;
-    ctx.save();
-    ctx.beginPath();
-    for (let i = 0 , len = coords.length; i < len; i++) {
-      pt = map.latLngToContainerPoint(L.latLng(coords[i][1], coords[i][0]));
-      i === 0 ? ctx.moveTo(pt.x, pt.y) : ctx.lineTo(pt.x, pt.y);
-    }
-    ctx.closePath();
-    for (let i = 0 , len = coords.length; i < len; i++) {
-      lpt = map.latLngToContainerPoint(L.latLng(coords[i][1], Number(coords[i][0]) - 360));
-      i === 0 ? ctx.moveTo(lpt.x, lpt.y) : ctx.lineTo(lpt.x, lpt.y);
-    }
-    ctx.closePath();
-    for (let i = 0 , len = coords.length; i < len; i++) {
-      rpt = map.latLngToContainerPoint(L.latLng(coords[i][1], Number(coords[i][0]) + 360));
-      i === 0 ? ctx.moveTo(rpt.x, rpt.y) : ctx.lineTo(rpt.x, rpt.y);
-    }
-    ctx.closePath();
-    ctx.clip();
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.restore();
-  },
 
  // 计算跨180度问题
   _caculateMeridian: function (latLngA, latLngB) {

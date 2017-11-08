@@ -1,17 +1,15 @@
 import geoJson from '../assets/outline.json'
 
-export default class {
+export default {
 
-  constructor (canvas , map, options) {
+  clip (canvas, map, options) {
+    if (!canvas || !map) return ;
     this._canvas = canvas;
     this._ctx = canvas.getContext('2d');
     this._map = map;
     this.options = Object.assign({
       isClipLeftRight: true
     }, options);
-  }
-
-  clip () {
     console.time('clip');
     var features = geoJson.features;
     var feature;
@@ -21,7 +19,7 @@ export default class {
     }
     console.timeEnd('clip');
     return this;
-  }
+  },
 
   _clipFeature (feature){
     var coords = [];
@@ -35,7 +33,7 @@ export default class {
         this._excuteClip(coords);
       }
     }
-  }
+  },
 
   _excuteClip (coords) {
     var ctx = this._ctx;
