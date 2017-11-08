@@ -4,13 +4,19 @@ import geoJson from '../assets/outline.json'
 export var PressureLayer = CanvasLayer.extend({
 
   options:{
-    isclip:false
+    isclip: false,
+    isDrawLeftRight: true
   },
 
   initialize: function (options, config) {
     CanvasLayer.prototype.initialize.call(this, options);
-    this.cfg = config;
-    this._data = config && config.data || [];
+    this.cfg = Object.assign({
+      lat: '0',
+      lng: '1',
+      value: '2',
+      data: []
+    }, config);
+    this._data = this.cfg.data;
   },
 
   setData: function (data) {
@@ -29,45 +35,48 @@ export var PressureLayer = CanvasLayer.extend({
 
   onDrawLayer: function (info) {
     // -- custom  draw
+    var canvas = this._canvas = info.canvas;
     var ctx = this._ctx = info.canvas.getContext('2d');
     var map = this._map = info.layer._map;
     var zoom = map.getZoom();
     var data = this._data;
     var points , lpoints, rpoints, text;
-    if(!data.length) {
-      return;
-    }
-    ctx.clearRect(0, 0, info.canvas.width, info.canvas.height);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     for(let i = 0, len = data.length; i < len; i++) {
       points = this.getPoints(map, data[i]);
-      lpoints = this.getLeft360Points(map, data[i]);
-      rpoints = this.getRight360Points(map, data[i]);
-      text = data[i][0][2];
+      text = data[i][0][this.cfg.value];
       this._drawLine(ctx, points);
-      this._drawLine(ctx, lpoints);
-      this._drawLine(ctx, rpoints);
+      if (this.options.isDrawLeftRight){
+        lpoints = this.getLeft360Points(map, data[i]);
+        rpoints = this.getRight360Points(map, data[i]);
+        this._drawLine(ctx, lpoints);
+        this._drawLine(ctx, rpoints);
+      }
       if (zoom >= 3 && zoom < 5 && text >=1000 || zoom >= 5) {
         this._drawText(ctx, points[Math.floor(points.length / 2)] ,text);
-        this._drawText(ctx, lpoints[Math.floor(points.length / 2)] ,text);
-        this._drawText(ctx, rpoints[Math.floor(points.length / 2)] ,text);
+        if (this.options.isDrawLeftRight){
+          this._drawText(ctx, lpoints[Math.floor(points.length / 2)] ,text);
+          this._drawText(ctx, rpoints[Math.floor(points.length / 2)] ,text);
+        }
       }
     }
 
     // clip
     if (this.options.isclip){
-      this._clip(info.canvas, ctx, map);
+      this._clip(canvas, ctx, map);
     }
   },
 
   getPoints (map, data) {
-    // 待处理问题..... 跨180度
     var pts = [];
     var latlngs = [], latlng;
     for (let i = 0, len = data.length; i < len; i++){
-      latlng = L.latLng(data[i][0], data[i][1]);
+      latlng = L.latLng(data[i][this.cfg.lat], data[i][this.cfg.lng]);
       latlngs.push(latlng);
     }
-    // 转化
+    // 跨180度合理化
     latlngs = this._legelLatLngs(latlngs);
     for (let i = 0, len = latlngs.length; i < len; i++){
       pts.push( map.latLngToContainerPoint(latlngs[i]));
@@ -76,14 +85,13 @@ export var PressureLayer = CanvasLayer.extend({
   },
 
   getLeft360Points (map, data) {
-    // 待处理问题..... 跨180度
     var pts = [];
     var latlngs = [], latlng;
     for (let i = 0, len = data.length; i < len; i++){
-      latlng = L.latLng(data[i][0], Number(data[i][1]) - 360);
+      latlng = L.latLng(data[i][this.cfg.lat], Number(data[i][this.cfg.lng]) - 360);
       latlngs.push(latlng);
     }
-    // 转化
+    // 跨180度合理化
     latlngs = this._legelLatLngs(latlngs);
     for (let i = 0, len = latlngs.length; i < len; i++){
       pts.push( map.latLngToContainerPoint(latlngs[i]));
@@ -92,14 +100,13 @@ export var PressureLayer = CanvasLayer.extend({
   },
 
   getRight360Points (map, data) {
-    // 待处理问题..... 跨180度
     var pts = [];
     var latlngs = [], latlng;
     for (let i = 0, len = data.length; i < len; i++){
-      latlng = L.latLng(data[i][0], Number(data[i][1]) + 360);
+      latlng = L.latLng(data[i][this.cfg.lat], Number(data[i][this.cfg.lng]) + 360);
       latlngs.push(latlng);
     }
-    // 转化
+    // 跨180度合理化
     latlngs = this._legelLatLngs(latlngs);
     for (let i = 0, len = latlngs.length; i < len; i++){
       pts.push( map.latLngToContainerPoint(latlngs[i]));
