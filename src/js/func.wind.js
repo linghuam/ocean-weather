@@ -10,6 +10,7 @@ export class FuncWind {
   start() {
     Papa.parse('./static/data/wind.csv', {
       download: true,
+      header: false,
       complete: function (results) {
         var datas = results.data;
         var config = {

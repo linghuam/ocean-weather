@@ -123,7 +123,8 @@ export var WindLayer = CanvasLayer.extend({
       lng: '1',
       value: '2',
       dir: '3',
-      data: []
+      data: [],
+      isDrawLeftRight: false
     }, config);
     this._data = this.cfg.data;
     this._sortData = this.sortByLat(this._data);
@@ -179,13 +180,13 @@ export var WindLayer = CanvasLayer.extend({
         latlng = L.latLng(latPts[j][this.cfg.lat], latPts[j][this.cfg.lng]);
         speed = Number(latPts[j][this.cfg.value]);
         dir = Number(latPts[j][this.cfg.dir]);
-        windobj = new Wind(latlng, speed, dir);
+        windobj = new Wind(latlng, speed, dir, { isDrawLeftRight: this.cfg.isDrawLeftRight });
         this.drawWind(ctx, windobj);
         if(windobj.options.isDrawLeftRight) {
           lLatLng = latlng.getSubtract360LatLng();
           rLatLng = latlng.getAdd360LatLng();
-          lwindobj = new Wind(lLatLng, speed, dir);
-          rwindobj = new Wind(rLatLng, speed, dir);
+          lwindobj = new Wind(lLatLng, speed, dir, { isDrawLeftRight: this.cfg.isDrawLeftRight });
+          rwindobj = new Wind(rLatLng, speed, dir, { isDrawLeftRight: this.cfg.isDrawLeftRight });
           this.drawWind(ctx, lwindobj);
           this.drawWind(ctx, rwindobj);
         }

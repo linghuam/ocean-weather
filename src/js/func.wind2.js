@@ -11,6 +11,7 @@ export class FuncWind2 {
   start() {
     Papa.parse('./static/data/wind.csv', {
       download: true,
+      header: false,
       complete: function (results) {
         this.getDataCallBack.call(this, results);
       }.bind(this)

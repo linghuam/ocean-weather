@@ -11,6 +11,7 @@ export class FuncFlow2 {
   start() {
     Papa.parse('./static/data/flow.csv', {
       download: true,
+      header: false,
       complete: function (results) {
         var data = [];
         var flowUObj = {

@@ -11,6 +11,7 @@ export class FuncSurge {
   start() {
     Papa.parse('./static/data/surge.csv', {
       download: true,
+      header: false,
       complete: function (results) {
         var datas = results.data;
         var config = {

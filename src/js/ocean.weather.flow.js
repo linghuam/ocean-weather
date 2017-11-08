@@ -12,7 +12,7 @@ export var FlowLayer = CanvasLayer.extend({
       value: '2',
       dir: '3',
       data: [],
-      isDrawLeftRight: true
+      isDrawLeftRight: false
     }, config);
     this._data = this.cfg.data;
     this._sortData = this.sortByLat(this._data);

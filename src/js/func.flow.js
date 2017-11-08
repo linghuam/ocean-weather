@@ -10,6 +10,7 @@ export class FuncFlow {
   start() {
     Papa.parse('./static/data/flow.csv', {
       download: true,
+      header: false,
       complete: function (results) {
         var datas = results.data;
         var config = {
