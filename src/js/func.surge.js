@@ -1,6 +1,5 @@
-import Papa from 'papaparse'
+import { ParseData } from './tool.parseData'
 import { SurgeLayer } from './ocean.weather.surge'
-// import { SurgeISOBands } from './leaflet.surge.isobands'
 
 export class FuncSurge {
 
@@ -9,32 +8,32 @@ export class FuncSurge {
   }
 
   start() {
-    Papa.parse('./static/data/surge.csv', {
-      download: true,
-      header: false,
-      complete: function (results) {
-        var datas = results.data;
-        var config = {
-          lat: '0',
-          lng: '1',
-          dir: '3',
-          value: '2',
-          data: datas
-        };
-        if(this._map.hasLayer(this._surgeLayer)) {
-          this._map.removeLayer(this._surgeLayer);
-        }
-        this._surgeLayer = new SurgeLayer(null, config);
-        // var surgeIsobands = new SurgeISOBands(null, config);
-        this._map.addLayer(this._surgeLayer);
-        // this._map.addLayer(surgeIsobands);
-      }.bind(this)
-    });
+    var url = './static/data/surge.csv';
+    ParseData(url, null ,function (results) {
+      this.getDataCallback(results);
+    }, this);
   }
 
   stop　() {
-    if(this._map.hasLayer(this._surgeLayer)) {
-      this._map.removeLayer(this._surgeLayer);
+    if(this._map.hasLayer(this._layer)) {
+      this._map.removeLayer(this._layer);
     }
+  }
+
+  getDataCallback (results) {
+    var datas = results.data;
+    datas.shift();
+    var config = {
+      lat: '0',
+      lng: '1',
+      value: '2',
+      dir: '3',
+      data: datas
+    };
+    if(this._map.hasLayer(this._layer)) {
+      this._map.removeLayer(this._layer);
+    }
+    this._layer = new SurgeLayer({}, config);
+    this._map.addLayer(this._layer);
   }
 }
