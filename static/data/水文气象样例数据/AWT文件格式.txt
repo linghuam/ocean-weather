@@ -70,5 +70,3 @@ SURFACE FRONTS FILE (yyyymmdd_hhZ_FR)
   (1 = cold front, 2 = warm front, 3 = occluded front). The points defining each front are ordered
   such that the movement of the front is to the right of the line drawn from first point in the list
   to last point.
-
-

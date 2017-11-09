@@ -1,49 +1,45 @@
-import Papa from 'papaparse'
+import { ParseData } from './tool.parseData'
 import { MB500Layer } from './ocean.weather.mb500'
 
 export class Func500mb {
 
-  constructor(map) {
-    this._map = map;
-  }
-
-  start() {
-    Papa.parse('./static/data/500mb.csv', {
-      download: true,
-      header: false,
-      complete: function (results) {
-        if (results.errors.length || !results.data.length) return;
-        this.getDataCallback(results.data);
-      }.bind(this)
-    });
-  }
-
-  stop　() {
-    if (this._map.hasLayer(this._layer)) {
-      this._layer.remove();
+    constructor(map) {
+      this._map = map;
     }
-  }
 
-  getDataCallback (data) {
-    // split data by line
-    var newData = [];
-    var temp = [];
-    var i, len, latlngs, leftlatlngs, rightlatlngs;
-    for (i = 0, len = data.length; i < len; i++){
-        if (data[i].length === 1 || i === len-1) {
-          if (temp.length >= 2) newData.push(temp);
+    start() {
+      this.contourData = [];
+      this.hlData = [];
+      var row , temp = []; 
+      var url = './static/data/水文气象样例数据/20120820_12Z_UN_500MB/20120820_12Z_UN.txt';
+      ParseData(url, function(results, parser) {
+        row = results.data[0];
+        if (row.length === 1) {
+          if (temp.length) this.contourData.push(temp);
           temp = [];
-        } else {
-          temp.push(data[i]);
+        } else if (row.length === 3) {
+          if ( typeof row[0] !== 'string') temp.push(row);
+        } else if (row.length === 4) {
+          if ( typeof row[0] !== 'string') this.hlData.push(row);
         }
+      },function (results) {
+        this.getDataCallback();
+      }, this);
     }
 
-    // new layer
-    if (this._map.hasLayer(this._layer)) {
-      this._layer.remove();
+    stop　() {
+      if (this._map.hasLayer(this._layer)) {
+        this._layer.remove();
+      }
     }
-    this._layer = new MB500Layer({}, {
-      data: newData
-    }).addTo(this._map)
-  }
+
+    getDataCallback () {
+      if (this._map.hasLayer(this._layer)) {
+        this._layer.remove();
+      }
+      this._layer = new MB500Layer({}, {
+        data: this.contourData,
+        hlData: this.hlData
+      }).addTo(this._map);
+    }
 }

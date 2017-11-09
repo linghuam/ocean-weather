@@ -9,6 +9,7 @@ export var MB500Layer = CanvasLayer.extend({
   options:{
     isclip: false,
     isDrawLeftRight: true,
+    showLevel: 4, // 文字的显示级别
     stroke: true,
     color:  '#605FF0', //'#61A5E8',
     weight: 0.8,
@@ -30,14 +31,17 @@ export var MB500Layer = CanvasLayer.extend({
       lat: '0',
       lng: '1',
       value: '2',
-      data: []
+      data: [],
+      hlData: []
     }, config);
     this._data = this.cfg.data;
+    this._hlData = this.cfg.hlData;
   },
 
-  setData: function (data) {
+  setData: function (data, hlData) {
     // -- custom data set
-    this._data = data;
+    this._data = data || [];
+    this._hlData = hlData || [];
     this.needRedraw(); // -- call to drawLayer
   },
 
@@ -56,10 +60,17 @@ export var MB500Layer = CanvasLayer.extend({
     var map = this._map = info.layer._map;
     var zoom = map.getZoom();
     var data = this._data;
-    var points , lpoints, rpoints, text;
+    var hlData = this._hlData;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    this._drawContour(data, ctx, map, zoom);
+    this._drawHL(hlData, ctx, map, zoom);
+    if (this.options.isclip)  ClipLand.clip(canvas, map);
+  },
 
+  _drawContour (data, ctx, map, zoom){
+    var points , lpoints, rpoints, text;
+    // var {hmin, lmax} = this.getHLMaxMinValue();
     for(let i = 0, len = data.length; i < len; i++) {
       points = this.getPoints(map, data[i]);
       text = data[i][0][this.cfg.value];
@@ -70,7 +81,7 @@ export var MB500Layer = CanvasLayer.extend({
         this._drawLine(ctx, lpoints);
         this._drawLine(ctx, rpoints);
       }
-      if (zoom >= 3 && zoom < 5 && text >= 400 || zoom >= 5) {
+      if (zoom >= this.options.showLevel) { // zoom >= 3 && zoom < 5 && text >= 1000 || zoom >= 5
         this._drawText(ctx, points[Math.floor(points.length / 2)] ,text);
         if (this.options.isDrawLeftRight){
           this._drawText(ctx, lpoints[Math.floor(points.length / 2)] ,text);
@@ -78,11 +89,35 @@ export var MB500Layer = CanvasLayer.extend({
         }
       }
     }
+  },
 
-    // clip
-    if (this.options.isclip){
-      ClipLand.clip(canvas, map);
+  _drawHL (data, ctx, map, zoom) {
+    var latlng, point, lpoint, rpoint, ishl, value;
+    for (let i = 0, len = data.length; i < len; i++){
+      latlng = L.latLng(data[i][0], data[i][1]);
+      point = map.latLngToContainerPoint(latlng);
+      lpoint = map.latLngToContainerPoint(latlng.getSubtract360LatLng());
+      rpoint = map.latLngToContainerPoint(latlng.getAdd360LatLng());
+      ishl = data[i][2];
+      value = data[i][3];
+      this._drawHLText(ctx, point, ishl, value);
+      if (this.options.isDrawLeftRight) {
+          this._drawHLText(ctx, lpoint, ishl, value);
+          this._drawHLText(ctx, rpoint, ishl, value);
+      }
     }
+  },
+
+  getHLMaxMinValue (){
+    var hmin, lmax;
+    var harr = [], larr = [];
+    for (let i = 0, len = this._hlData.length; i < len; i++){
+      if (this._hlData[i][2] === 1) harr.push( this._hlData[i][3] );
+      else larr.push( this._hlData[i][3] );
+    }
+    hmin = Math.min(...harr);
+    lmax = Math.max(...larr);
+    return {hmin, lmax};
   },
 
   getPoints (map, data) {
@@ -155,6 +190,22 @@ export var MB500Layer = CanvasLayer.extend({
     ctx.restore();
   },
 
+  _drawHLText: function(ctx, pt, ishl, value){
+    var hl = ishl === 1 ? 'H' : 'L';
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = 'normal normal 12px Microsoft YaHei';
+    ctx.fillStyle = ishl ? '#E16757' : '#EECB5F';
+    ctx.strokeStyle = this.options.fontStrokeColor;
+    ctx.lineWidth = this.options.fontStrokeSize;
+    ctx.strokeText(hl, pt.x, pt.y);
+    ctx.fillText(hl, pt.x, pt.y);
+    ctx.strokeText(value, pt.x, pt.y + 12);
+    ctx.fillText(value, pt.x, pt.y + 12);
+    ctx.restore();
+  },
+
   _fillStroke: function (ctx) {
 		var options = this.options;
 
@@ -222,5 +273,4 @@ export var MB500Layer = CanvasLayer.extend({
     }
     return result;
   }
-
 });
