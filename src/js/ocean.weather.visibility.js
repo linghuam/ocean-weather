@@ -9,6 +9,7 @@ export var VisibilityLayer = CanvasLayer.extend({
   options:{
     isclip: false,
     isDrawLeftRight: false,
+    showLevel: 5, // 文字的显示级别
     stroke: true,
     color:  '#EECB5F', //'#61A5E8',
     weight: 0.8,
@@ -84,7 +85,7 @@ export var VisibilityLayer = CanvasLayer.extend({
         this._drawLine(offScreenContext, lpoints);
         this._drawLine(offScreenContext, rpoints);
       }
-      if (zoom >= 3 && zoom < 5 && text >=1000 || zoom >= 5) {
+      if (zoom >= this.options.showLevel) {
         this._drawText(offScreenContext, points[Math.floor(points.length / 2)] ,text);
         if (this.options.isDrawLeftRight){
           this._drawText(offScreenContext, lpoints[Math.floor(points.length / 2)] ,text);
@@ -94,27 +95,6 @@ export var VisibilityLayer = CanvasLayer.extend({
     }
     ctx.drawImage(offScreenCanvas, 0, 0, offScreenCanvas.width, offScreenCanvas.height);
     console.timeEnd('visibility:render');
-
-    // console.time('visibility:render');
-    // for(let i = 0, len = data.length; i < len; i++) {
-    //   points = this.getPoints(map, data[i]);
-    //   text = data[i][0][this.cfg.value];
-    //   this._drawLine(ctx, points);
-    //   if (this.options.isDrawLeftRight){
-    //     lpoints = this.getLeft360Points(map, data[i]);
-    //     rpoints = this.getRight360Points(map, data[i]);
-    //     this._drawLine(ctx, lpoints);
-    //     this._drawLine(ctx, rpoints);
-    //   }
-    //   if (zoom >= 3 && zoom < 5 && text >=1000 || zoom >= 5) {
-    //     this._drawText(ctx, points[Math.floor(points.length / 2)] ,text);
-    //     if (this.options.isDrawLeftRight){
-    //       this._drawText(ctx, lpoints[Math.floor(points.length / 2)] ,text);
-    //       this._drawText(ctx, rpoints[Math.floor(points.length / 2)] ,text);
-    //     }
-    //   }
-    // }
-    // console.timeEnd('visibility:render');
 
     // clip
     if (this.options.isclip){
@@ -196,6 +176,7 @@ export var VisibilityLayer = CanvasLayer.extend({
   },
 
   _drawText: function (ctx, pt, text){
+    var nm = Number(text * 1000 / 1852).toFixed(1);
     ctx.save();
     ctx.textAlign = 'start';
     ctx.textBaseline = 'middle';
@@ -203,8 +184,8 @@ export var VisibilityLayer = CanvasLayer.extend({
     ctx.fillStyle = this.options.fontColor;
     ctx.strokeStyle = this.options.fontStrokeColor;
     ctx.lineWidth = this.options.fontStrokeSize;
-    ctx.strokeText(text, pt.x, pt.y);
-    ctx.fillText(text, pt.x, pt.y);
+    ctx.strokeText(nm + 'nm', pt.x, pt.y);
+    ctx.fillText(nm + 'nm', pt.x, pt.y);
     ctx.restore();
   },
 
