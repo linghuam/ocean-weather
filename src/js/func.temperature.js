@@ -1,4 +1,4 @@
-import Papa from 'papaparse'
+import { ParseData } from './tool.parseData'
 import { HeatmapOverlay } from './leafletHeatmap/leaflet-heatmap'
 import { TemperatureLayer } from './ocean.weather.temperature'
 import  ClipLand  from './tool.clipLand'
@@ -10,13 +10,27 @@ export class FuncTemperature {
   }
 
   start() {
-    Papa.parse('./static/data/temperature.csv', {
-      download: true,
-      header: false,
-      complete: function (results) {
-        this.getDataCallback.call(this, results);
-      }.bind(this)
-    });
+    this.heatMapData = [];
+    this.contourData = [];
+    this.hlData = [];
+    var row , temp = [];
+    var url = './static/data/temperature.csv';
+    ParseData(url, function(results, parser) {
+      row = results.data[0];
+      if (row.length === 1) {
+        if (temp.length) this.contourData.push(temp);
+        temp = [];
+      } else if (row.length === 3) {
+        if ( typeof row[0] !== 'string') {
+          temp.push(row);
+          this.heatMapData.push(row);
+        }
+      } else if (row.length === 4) {
+        if ( typeof row[0] !== 'string') this.hlData.push(row);
+      }
+    },function (results) {
+      this.getDataCallback();
+    }, this);
   }
 
   stop　() {
@@ -28,37 +42,19 @@ export class FuncTemperature {
     }
   }
 
-  getDataCallback (results) {
-    var data = results.data || [];
-    var newData = [];
-    var temp = [];
-    var i, len;
-    for (i = 0, len = data.length; i < len; i++){
-        if (data[i].length === 1 || i === len - 1) {
-          if (temp.length >= 2) newData.push(temp);
-          temp = [];
-        } else {
-          temp.push(data[i]);
-        }
-    }
+  getDataCallback () {
+    // contour
     this._layer = new TemperatureLayer({
         isclip:true
     }, {
-      data:newData
+      data: this.contourData,
+      hlData: this.hlData
     }).addTo(this._map);
 
     // heatmap
-    data = data.filter(function (value) {
-      return value !== '' && value.length > 1;
-    });
-    // var ldata = [], rdata = [];
-    // for (let i = 0, len = data.length; i < len; i++){
-    //   ldata.push([data[i][0], data[i][1] - 360, data[i][2]]);
-    //   rdata.push([data[i][0], data[i][1] + 360, data[i][2]]);
-    // }
     var datacfg = {
       max: 39,
-      data: data
+      data: this.heatMapData
     };
     var cfg = {
       // radius should be small ONLY if scaleRadius is true (or small radius is intended)
