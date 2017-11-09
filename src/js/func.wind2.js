@@ -1,6 +1,6 @@
 import 'leaflet-velocity/dist/leaflet-velocity.min.css'
 import 'leaflet-velocity'
-import Papa from 'papaparse'
+import { ParseData } from './tool.parseData'
 
 export class FuncWind2 {
 
@@ -9,18 +9,15 @@ export class FuncWind2 {
   }
 
   start() {
-    Papa.parse('./static/data/wind.csv', {
-      download: true,
-      header: false,
-      complete: function (results) {
-        this.getDataCallBack.call(this, results);
-      }.bind(this)
-    });
+    var url = './static/data/wind.csv';
+    ParseData(url, null ,function (results) {
+      this.getDataCallBack(results);
+    }, this);
   }
 
   stop　() {
-    if(this._map.hasLayer(this._velocityLayer)) {
-      this._map.removeLayer(this._velocityLayer);
+    if(this._map.hasLayer(this._layer)) {
+      this._map.removeLayer(this._layer);
     }
   }
 
@@ -60,14 +57,14 @@ export class FuncWind2 {
         "refTime": "2017-02-01 23:00:00"
       }
     };
-    for(var i = 0, len = results.data.length; i < len; i++) {
+    for(var i = 1, len = results.data.length; i < len; i++) {
       var value = results.data[i][2] * 1852 / 3600;
       var rad = Math.PI * results.data[i][3] / 180;
       windUObj.data.push(value * Math.sin(rad));
       windVObj.data.push(value * Math.cos(rad));
     }
     data.push(windUObj, windVObj);
-    var velocityLayer = this._velocityLayer = L.velocityLayer({
+    var velocityLayer = this._layer = L.velocityLayer({
       displayValues: true,
       displayOptions: {
         velocityType: 'Global Wind',
@@ -77,8 +74,8 @@ export class FuncWind2 {
       data: data,
       maxVelocity: 15
     });
-    if(this._map.hasLayer(this._velocityLayer)) {
-      this._map.removeLayer(this._velocityLayer);
+    if(this._map.hasLayer(this._layer)) {
+      this._map.removeLayer(this._layer);
     }
     this._map.addLayer(velocityLayer);
   }
