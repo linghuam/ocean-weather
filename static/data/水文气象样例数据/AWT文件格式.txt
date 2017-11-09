@@ -34,7 +34,7 @@ in meters. There is no second sections for high and low center values.
 VISIBILITY CONTOURS (yyyymmdd_hhZ_VS.txt)（能见度等值线）
 -------------------------------------------------------
 Same format as the pressure data ( [Latitude],[Longitude],[Value] ) where Value is the visibility
-in kilometers. There is no second sections for high and low center values.
+in kilometers（千米）. There is no second sections for high and low center values.
 
 
 GRID POINT WIND DATA (yyyymmdd_hhZ_BC.txt 风)（yyyymmdd_hhZ_CR.txt 洋流）（20120820_12Z_1C.txt 涌）
