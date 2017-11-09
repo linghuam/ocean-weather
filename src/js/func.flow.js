@@ -1,4 +1,4 @@
-import Papa from 'papaparse'
+import { ParseData } from './tool.parseData'
 import { FlowLayer } from './ocean.weather.flow'
 
 export class FuncFlow {
@@ -8,30 +8,32 @@ export class FuncFlow {
   }
 
   start() {
-    Papa.parse('./static/data/flow.csv', {
-      download: true,
-      header: false,
-      complete: function (results) {
-        var datas = results.data;
-        var config = {
-          lat: '0',
-          lng: '1',
-          dir: '3',
-          value: '2',
-          data: datas
-        };
-        if(this._map.hasLayer(this._flowLayer)) {
-          this._map.removeLayer(this._flowLayer);
-        }
-        this._flowLayer = new FlowLayer(null, config);
-        this._map.addLayer(this._flowLayer);
-      }.bind(this)
-    });
+    var url = './static/data/flow.csv';
+    ParseData(url, null ,function (results) {
+      this.getDataCallback(results);
+    }, this);
   }
 
   stop　() {
-    if(this._map.hasLayer(this._flowLayer)) {
-      this._map.removeLayer(this._flowLayer);
+    if(this._map.hasLayer(this._layer)) {
+      this._map.removeLayer(this._layer);
     }
+  }
+
+  getDataCallback (results) {
+    var datas = results.data;
+    datas.shift();
+    var config = {
+      lat: '0',
+      lng: '1',
+      value: '2',
+      dir: '3',
+      data: datas
+    };
+    if(this._map.hasLayer(this._layer)) {
+      this._map.removeLayer(this._layer);
+    }
+    this._layer = new FlowLayer({}, config);
+    this._map.addLayer(this._layer);
   }
 }
