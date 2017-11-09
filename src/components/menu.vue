@@ -29,6 +29,15 @@ export default {
   methods: {
     btnClickEvt(type, event) {
       var map = this.$parent.$data.map;
+      this._funcWind && this._funcWind.stop();
+      this._funcFlow && this._funcFlow.stop();
+      this._funcFlow2 && this._funcFlow2.stop();
+      this._funcPressure && this._funcPressure.stop();
+      this._funcVisibility && this._funcVisibility.stop();
+      this._funcSurge && this._funcSurge.stop();
+      this._func500mb && 　this._func500mb.stop();
+      this._funcTemperature && this._funcTemperature.stop();
+      this._funcWave && this._funcWave.stop();
       if(type === '清空所有图层'){
         this._funcWind && this._funcWind.stop();
         this._funcWind2 && this._funcWind2.stop();
