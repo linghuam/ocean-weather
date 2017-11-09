@@ -1,4 +1,4 @@
-import Papa from 'papaparse'
+import { ParseData } from './tool.parseData'
 import { VisibilityLayer } from './ocean.weather.visibility'
 
 export class FuncVisibility {
@@ -8,14 +8,20 @@ export class FuncVisibility {
   }
 
   start() {
-    Papa.parse('./static/data/visibility.csv', {
-      download: true,
-      header: false,
-      complete: function (results) {
-        if (results.errors.length || !results.data.length) return;
-        this.getDataCallback(results.data);
-      }.bind(this)
-    });
+    this.contourData = [];
+    var row , temp = [];
+    var url = './static/data/visibility.csv';
+    ParseData(url, function(results, parser) {
+      row = results.data[0];
+      if (row.length === 1) {
+        if (temp.length) this.contourData.push(temp);
+        temp = [];
+      } else if (row.length === 3) {
+        if ( typeof row[0] !== 'string') temp.push(row);
+      }
+    },function (results) {
+      this.getDataCallback();
+    }, this);
   }
 
   stop　() {
@@ -24,26 +30,12 @@ export class FuncVisibility {
     }
   }
 
-  getDataCallback (data) {
-    // split data by line
-    var newData = [];
-    var temp = [];
-    var i, len, latlngs, leftlatlngs, rightlatlngs;
-    for (i = 0, len = data.length; i < len; i++){
-        if (data[i].length === 1 || i === len-1) {
-          if (temp.length >= 2) newData.push(temp);
-          temp = [];
-        } else {
-          temp.push(data[i]);
-        }
-    }
-
-    // new layer
+  getDataCallback () {
     if (this._map.hasLayer(this._layer)) {
       this._layer.remove();
     }
     this._layer = new VisibilityLayer({}, {
-      data: newData
+      data: this.contourData
     }).addTo(this._map)
   }
 }
