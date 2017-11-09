@@ -10,8 +10,8 @@ export class Func500mb {
     start() {
       this.contourData = [];
       this.hlData = [];
-      var row , temp = []; 
-      var url = './static/data/水文气象样例数据/20120820_12Z_UN_500MB/20120820_12Z_UN.txt';
+      var row , temp = [];
+      var url = './static/data/500mb.csv';
       ParseData(url, function(results, parser) {
         row = results.data[0];
         if (row.length === 1) {
