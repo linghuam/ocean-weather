@@ -16,7 +16,7 @@ export default {
       minZoom: 1,
       maxZoom: 18,
       zoom: 2,
-      center: [23.473323877771172, 134.42871093750003],
+      center: [0, 0],
       worldCopyJump:true,
       // maxBounds:L.latLngBounds(L.latLng(-90,-540),L.latLng(90,540))
     });
@@ -25,7 +25,7 @@ export default {
 
     // add control
     var attrcontrol = L.control.attribution({ position: 'topright', prefix: false }).addTo(map);
-    // map events 
+    // map events
     map.on("mousemove", function (e) {
         var latlng = e.latlng;
         var layerpoint = e.layerPoint;
@@ -40,7 +40,7 @@ export default {
             var container = attrcontrol.getContainer();
             $(container).html(html);
         }
-    }, this);    
+    }, this);
     // test -start
     // var area = [[28, 116],[28, -116],[20, -116],[20, 116]];
     // var area1 = [[28, 116+360],[28, -116+360],[20, -116+360],[20, 116+360]];

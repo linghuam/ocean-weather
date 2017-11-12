@@ -59,14 +59,15 @@ export class FuncTemperature {
     var cfg = {
       // radius should be small ONLY if scaleRadius is true (or small radius is intended)
       // if scaleRadius is false it will be the constant radius used in pixels
-      "radius": 2,
-      "maxOpacity": .8,
+      "radius": 2.4,
+      "maxOpacity": .68,
       // scales the radius based on map zoom
       "scaleRadius": true,
       // if set to false the heatmap uses the global maximum for colorization
       // if activated: uses the data maximum within the current map boundaries
       //   (there will always be a red spot with useLocalExtremas true)
-      "useLocalExtrema": false,
+      "useLocalExtrema": true,
+      // defaultGradient: { 0.05: "#CC00FF", 0.25: "#6699FF", 0.45: "#99FF33", 0.65: "#FFFF33", 0.85: "#FF9933", 1.0: "#FF0000" },
       // which field name in your data represents the latitude - default "lat"
       latField: '0',
       // which field name in your data represents the longitude - default "lng"
