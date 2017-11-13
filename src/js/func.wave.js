@@ -53,20 +53,20 @@ export class FuncWave {
 
     // heatmap
     var datacfg = {
-      max: 10,
+      max: 20,
       data: this.heatMapData
     };
     var cfg = {
       // radius should be small ONLY if scaleRadius is true (or small radius is intended)
       // if scaleRadius is false it will be the constant radius used in pixels
-      "radius": 2.4,
+      "radius": 4.0,
       "maxOpacity": .68,
       // scales the radius based on map zoom
       "scaleRadius": true,
       // if set to false the heatmap uses the global maximum for colorization
       // if activated: uses the data maximum within the current map boundaries
       //   (there will always be a red spot with useLocalExtremas true)
-      "useLocalExtrema": true,
+      "useLocalExtrema": false,
       // which field name in your data represents the latitude - default "lat"
       latField: '0',
       // which field name in your data represents the longitude - default "lng"
