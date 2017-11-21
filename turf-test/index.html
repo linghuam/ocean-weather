@@ -3,14 +3,59 @@
 <head>
 	<meta charset="utf-8">
 	<title>turf</title>
+  <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.7.2/jquery.min.js"></script>
 	<script type="text/javascript" src="https://npmcdn.com/@turf/turf@4.7.3/turf.min.js"></script>
 </head>
 <body>
 <div id="content"></div>
 <script type="text/javascript">
-	var ele = document.getElementById('content');
-	var line = turf.lineString([[179+360, 0], [-179, 0], [-178, 0]]);
-  var chunk = turf.lineChunk(line, 100, 'kilometers');
+	// var ele = document.getElementById('content');
+	// var line = turf.lineString([[179+360, 0], [-179, 0], [-178, 0]]);
+  // var chunk = turf.lineChunk(line, 100, 'kilometers');
+  //
+  $.getJSON('./data.json', function (points){
+    console.time('iterpolateTime');
+    // var tin = turf.tin(points, 'elevation');
+    var options = { gridType: 'square' };
+    var grid = turf.interpolate(points, 100, options);
+    console.timeEnd('iterpolateTime');
+    // L.geoJSON(tin, {
+    //   style: function (feature) {
+    //     return {
+    //       color: this.getColor(feature.properties.c),
+    //     };
+    //   }.bind(this),
+    // }).addTo(this._map);
+    // L.geoJSON(grid, {
+    //   style: function (feature) {
+    //     return {
+    //       color: this.getColor(feature.properties.elevation)
+    //     };
+    //   }.bind(this)
+    // }).addTo(this._map);
+  }).always(function (xhr){
+    var data = xhr.responseText;
+    var points = JSON.parse(data);
+    console.time('iterpolateTime');
+    // var tin = turf.tin(points, 'elevation');
+    var options = { gridType: 'square' };
+    var grid = turf.interpolate(points, 100, options);
+    console.timeEnd('iterpolateTime');
+    // L.geoJSON(tin, {
+    //   style: function (feature) {
+    //     return {
+    //       color: this.getColor(feature.properties.c),
+    //     };
+    //   }.bind(this),
+    // }).addTo(this._map);
+    // L.geoJSON(grid, {
+    //   style: function (feature) {
+    //     return {
+    //       color: this.getColor(feature.properties.elevation)
+    //     };
+    //   }.bind(this)
+    // }).addTo(this._map);    
+  });
 </script>
 </body>
 </html>
