@@ -30,6 +30,7 @@ export default {
     btnClickEvt(type, event) {
       var map = this.$parent.$data.map;
       this._funcWind && this._funcWind.stop();
+      this._funcWind2 && this._funcWind2.stop();
       this._funcFlow && this._funcFlow.stop();
       this._funcFlow2 && this._funcFlow2.stop();
       this._funcPressure && this._funcPressure.stop();
