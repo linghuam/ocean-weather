@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<GoogleMapsVersions>
+  <SatelliteServerVersion>25</SatelliteServerVersion>
+  <RoadDataServerVersion>
+    <MajorVersion>2</MajorVersion>
+    <MinorVersion>69</MinorVersion>
+  </RoadDataServerVersion>
+</GoogleMapsVersions>

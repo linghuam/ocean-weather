@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>加载插值切片</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+</head>
+
+<body>
+    <div id="map" style="position:absolute;left:0;top:0;bottom:0;right:0;overflow: hidden;width:100%;height:100%;"></div>
+
+    <script type="text/javascript">
+    // googlelayer
+    var GoogleLayer = L.TileLayer.extend({
+
+        initialize: function (url, options) {
+            L.TileLayer.prototype.initialize.call(this, url, options);
+        },
+
+        getTileUrl: function (tilePoint) {
+            return L.Util.template(this._url, {
+                x: tilePoint.x,
+                y: tilePoint.y,
+                z: tilePoint.z
+            })
+        }
+    });
+    // init map
+    var mymap = L.map('map', {
+        center: [39.90923, 116.397428],
+        zoom: 2,
+        worldCopyJump: true
+    });
+    // add layer
+    new GoogleLayer('http://mt2.google.cn/vt/lyrs=m&hl=zh-CN&gl=cn&s=Gal&z={z}&x={x}&y={y}').addTo(mymap);
+    </script>
+
+    <script type="text/javascript">
+    L.DensityLayer = L.TileLayer.extend({
+
+        initialize: function (url, options) {
+            // http://localhost:8080/densitymap/vesselcrosstime/201500/tile/L01/R00000000/C00000000.png
+            // http://localhost:8080/densitymap/vesselcrosstime/201500/tile/{z}/{x}/{y}.png
+            L.TileLayer.prototype.initialize.call(this, url, options);
+        },
+
+        getTileUrl: function (tilePoint) {
+            var zl = tilePoint.z;
+            var ty = tilePoint.y;
+            var template = "00000000";
+            var levDir = "";
+            var rowDir = "";
+            var colDir = "";
+            levDir = "L" + this.pad(String(zl), 2);
+            var xx = tilePoint.x.toString(16);
+            colDir = "C" + template.substring(0, template.length - xx.length) + xx;
+            var yy = tilePoint.y.toString(16); //这里减去偏移值
+            rowDir = "R" + template.substring(0, template.length - yy.length) + yy;
+
+            return L.Util.template(this._url, {
+                x: rowDir,
+                y: colDir,
+                z: levDir
+            });
+        },
+
+        /**
+         * 高位补全方法
+         * @param {Object} 数字类型字符串
+         * @param {Object} 总位数，不足则高位补0
+         */
+        pad: function (numStr, n) {
+            var len = numStr.length;
+            while(len < n) {
+                numStr = "0" + numStr;
+                len++;
+            }
+            return numStr;
+        }
+
+    });
+
+    L.densityLayer = function (url, options) {
+        return new L.DensityLayer(url, options);
+    }
+    </script>
+    <script type="text/javascript">
+    L.densityLayer('./output/idwResTest/Layers/_alllayers/{z}/{x}/{y}.png').addTo(mymap);
+    </script>
+</body>
+
+</html>

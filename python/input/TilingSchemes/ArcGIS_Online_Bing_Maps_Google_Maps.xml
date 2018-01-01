@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<CacheInfo xsi:type='typens:CacheInfo' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:typens='http://www.esri.com/schemas/ArcGIS/9.3'>
+  <TileCacheInfo xsi:type='typens:TileCacheInfo'>
+    <SpatialReference xsi:type='typens:ProjectedCoordinateSystem'>
+      <WKT>PROJCS[&quot;WGS_1984_Web_Mercator_Auxiliary_Sphere&quot;,GEOGCS[&quot;GCS_WGS_1984&quot;,DATUM[&quot;D_WGS_1984&quot;,SPHEROID[&quot;WGS_1984&quot;,6378137.0,298.257223563]],PRIMEM[&quot;Greenwich&quot;,0.0],UNIT[&quot;Degree&quot;,0.0174532925199433]],PROJECTION[&quot;Mercator_Auxiliary_Sphere&quot;],PARAMETER[&quot;False_Easting&quot;,0.0],PARAMETER[&quot;False_Northing&quot;,0.0],PARAMETER[&quot;Central_Meridian&quot;,0.0],PARAMETER[&quot;Standard_Parallel_1&quot;,0.0],PARAMETER[&quot;Auxiliary_Sphere_Type&quot;,0.0],UNIT[&quot;Meter&quot;,1.0],AUTHORITY[&quot;EPSG&quot;,3857]]</WKT>
+      <XOrigin>-20037700</XOrigin>
+      <YOrigin>-30241100</YOrigin>
+      <XYScale>148923141.92838538</XYScale>
+      <ZOrigin>-100000</ZOrigin>
+      <ZScale>10000</ZScale>
+      <MOrigin>-100000</MOrigin>
+      <MScale>10000</MScale>
+      <XYTolerance>0.001</XYTolerance>
+      <ZTolerance>0.001</ZTolerance>
+      <MTolerance>0.001</MTolerance>
+      <HighPrecision>true</HighPrecision>
+      <WKID>3857</WKID>
+    </SpatialReference>
+    <TileOrigin xsi:type='typens:PointN'>
+      <X>-20037508.342787</X>
+      <Y>20037508.342787</Y>
+    </TileOrigin>
+    <TileCols>256</TileCols>
+    <TileRows>256</TileRows>
+    <DPI>96</DPI>
+    <LODInfos xsi:type='typens:ArrayOfLODInfo'>
+      <LODInfo xsi:type='typens:LODInfo'>
+        <LevelID>0</LevelID>
+        <Scale>591657527.591555</Scale>
+        <Resolution>156543.033928</Resolution>
+      </LODInfo>
+      <LODInfo xsi:type='typens:LODInfo'>
+        <LevelID>1</LevelID>
+        <Scale>295828763.795777</Scale>
+        <Resolution>78271.5169639999</Resolution>
+      </LODInfo>
+      <LODInfo xsi:type='typens:LODInfo'>
+        <LevelID>2</LevelID>
+        <Scale>147914381.897889</Scale>
+        <Resolution>39135.7584820001</Resolution>
+      </LODInfo>
+      <LODInfo xsi:type='typens:LODInfo'>
+        <LevelID>3</LevelID>
+        <Scale>73957190.948944</Scale>
+        <Resolution>19567.8792409999</Resolution>
+      </LODInfo>
+      <LODInfo xsi:type='typens:LODInfo'>
+        <LevelID>4</LevelID>
+        <Scale>36978595.474472</Scale>
+        <Resolution>9783.93962049996</Resolution>
+      </LODInfo>
+      <LODInfo xsi:type='typens:LODInfo'>
+        <LevelID>5</LevelID>
+        <Scale>18489297.737236</Scale>
+        <Resolution>4891.96981024998</Resolution>
+      </LODInfo>
+      <LODInfo xsi:type='typens:LODInfo'>
+        <LevelID>6</LevelID>
+        <Scale>9244648.868618</Scale>
+        <Resolution>2445.98490512499</Resolution>
+      </LODInfo>
+      <LODInfo xsi:type='typens:LODInfo'>
+        <LevelID>7</LevelID>
+        <Scale>4622324.434309</Scale>
+        <Resolution>1222.99245256249</Resolution>
+      </LODInfo>
+      <LODInfo xsi:type='typens:LODInfo'>
+        <LevelID>8</LevelID>
+        <Scale>2311162.217155</Scale>
+        <Resolution>611.49622628138</Resolution>
+      </LODInfo>
+      <LODInfo xsi:type='typens:LODInfo'>
+        <LevelID>9</LevelID>
+        <Scale>1155581.108577</Scale>
+        <Resolution>305.748113140558</Resolution>
+      </LODInfo>
+      <LODInfo xsi:type='typens:LODInfo'>
+        <LevelID>10</LevelID>
+        <Scale>577790.554289</Scale>
+        <Resolution>152.874056570411</Resolution>
+      </LODInfo>
+      <LODInfo xsi:type='typens:LODInfo'>
+        <LevelID>11</LevelID>
+        <Scale>288895.277144</Scale>
+        <Resolution>76.4370282850732</Resolution>
+      </LODInfo>
+      <LODInfo xsi:type='typens:LODInfo'>
+        <LevelID>12</LevelID>
+        <Scale>144447.638572</Scale>
+        <Resolution>38.2185141425366</Resolution>
+      </LODInfo>
+      <LODInfo xsi:type='typens:LODInfo'>
+        <LevelID>13</LevelID>
+        <Scale>72223.819286</Scale>
+        <Resolution>19.1092570712683</Resolution>
+      </LODInfo>
+      <LODInfo xsi:type='typens:LODInfo'>
+        <LevelID>14</LevelID>
+        <Scale>36111.909643</Scale>
+        <Resolution>9.55462853563415</Resolution>
+      </LODInfo>
+      <LODInfo xsi:type='typens:LODInfo'>
+        <LevelID>15</LevelID>
+        <Scale>18055.954822</Scale>
+        <Resolution>4.77731426794937</Resolution>
+      </LODInfo>
+      <LODInfo xsi:type='typens:LODInfo'>
+        <LevelID>16</LevelID>
+        <Scale>9027.977411</Scale>
+        <Resolution>2.38865713397468</Resolution>
+      </LODInfo>
+      <LODInfo xsi:type='typens:LODInfo'>
+        <LevelID>17</LevelID>
+        <Scale>4513.988705</Scale>
+        <Resolution>1.19432856685505</Resolution>
+      </LODInfo>
+      <LODInfo xsi:type='typens:LODInfo'>
+        <LevelID>18</LevelID>
+        <Scale>2256.994353</Scale>
+        <Resolution>0.597164283559817</Resolution>
+      </LODInfo>
+      <LODInfo xsi:type='typens:LODInfo'>
+        <LevelID>19</LevelID>
+        <Scale>1128.497176</Scale>
+        <Resolution>0.298582141647617</Resolution>
+      </LODInfo>
+    </LODInfos>
+  </TileCacheInfo>
+  <TileImageInfo xsi:type='typens:TileImageInfo'>
+    <CacheTileFormat>PNG8</CacheTileFormat>
+    <CompressionQuality>0</CompressionQuality>
+    <Antialiasing>false</Antialiasing>
+  </TileImageInfo>
+</CacheInfo>
