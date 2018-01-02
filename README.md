@@ -49,19 +49,19 @@ leaflet-velocitydemo：https://danwild.github.io/leaflet-velocity/
 
 * 全球跨180度展示
 
- worldCopyJump:true
+  worldCopyJump:true
 
- https://github.com/Leaflet/Leaflet/pull/1293
+  https://github.com/Leaflet/Leaflet/pull/1293
 
- https://github.com/Leaflet/Leaflet/pull/1293/commits/66b5054b21646fa835b99d47c94bfbb0e8b42062
+  https://github.com/Leaflet/Leaflet/pull/1293/commits/66b5054b21646fa835b99d47c94bfbb0e8b42062
 
 * 线光滑
 
- http://turfjs.org/docs/#bezier
+  http://turfjs.org/docs/#bezier
 
 * 海陆裁剪
 
- canvas剪辑区域
+  canvas剪辑区域
 
 
 ## 其它
