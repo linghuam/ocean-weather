@@ -25,7 +25,7 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 
 在线访问地址：https://linghuam.github.io/ocean-weather/dist/
 
-leaflet-velocitydemo：https://danwild.github.io/leaflet-velocity/
+leaflet-velocity demo：https://danwild.github.io/leaflet-velocity/
 
 
 ## 理论依据
